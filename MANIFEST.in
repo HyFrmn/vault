@@ -1,0 +1,3 @@
+include vault/config/deployment.ini_tmpl
+recursive-include vault/public *
+recursive-include vault/templates *
