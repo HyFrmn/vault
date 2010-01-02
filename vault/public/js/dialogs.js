@@ -72,7 +72,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 			width: 250
 		},
 		defaultType: 'textfield',
-		fileUpload: true,
+		fileUpload: false,
 		buttons: [{
 			text: 'Save',
 			handler: function(){
@@ -82,7 +82,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 						url: this.submitUrl,
 						method: 'POST',
 						isUpload: this.fileUpload,
-						success: this.load_results,
+						success: this.submit_success_callback,
 						failure: alert,
 						scope: this,
 					})
@@ -91,7 +91,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 					this.form.getForm().submit({
 						method: 'POST',
 						url: this.submitUrl,
-						success: this.load_results,
+						success: this.submit_success_callback,
 						failure: alert,
 						scope: this,
 						params: this.form.getForm().getValues(),
@@ -185,10 +185,11 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 		Vault.FormDialog.superclass.show.apply(this)
 	},
 	
-	load_results: function(){
+	submit_success_callback: function(response, result, type){
+		obj = Ext.decode(result.response.responseText)
 		if (this.resultPanel){
 			this.resultPanel.removeAll()
-			this.resultPanel.add(new Vault.Details())
+			this.resultPanel.add(obj.view)
 			this.resultPanel.doLayout()
 		}
 	}

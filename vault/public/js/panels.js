@@ -14,7 +14,7 @@ Vault.newResourceGrid = function(params, config){
 			tbar: [{
 					text: 'Add Resource',
 					handler: function(){
-						Vault.newResourceForm(Vault.mainPanel, project_id)
+						Vault.newResourceForm(Vault.mainPanel, 1)
 					},
 					scope: this,
 			 },{
