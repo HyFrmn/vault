@@ -45,7 +45,6 @@ Vault.LayoutPanel = Ext.extend(Ext.Panel, {
 	loadLayout_callback : function(r, o){
 	    obj = Ext.decode(r.responseText)
 	    panel = new Vault.LayoutPanel({items: obj})
-	    console.info(panel)
 	    this.replace(panel)
 	},
 });
@@ -90,7 +89,6 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     		load: {
     			fn: function(tl, n, r){
     				n.resource_id = n.id.split(':')[1]
-    				console.info(r)
     			},
     			scope: this,
     		},
@@ -105,13 +103,10 @@ Vault.mainMenu = new Ext.tree.TreePanel({
 						type = tmp[0]
 						id = tmp[1]
 						view = null
-						if ( type == 'resource'){
+						resource_types = ['resource', 'project', 'preview']
+						if ( resource_types.indexOf(type) != -1 ){
 							view = Vault.newResourceDetails(id, { resultPanel: Vault.mainPanel })
 						}
-						if ( type == 'project'){
-							view = Vault.newResourceGrid({ project_id : id }, { resultPanel: Vault.mainPanel })
-						}
-						console.info(type)
 						if (view) {
 							Vault.mainPanel.replace(view)
 						}
@@ -128,7 +123,6 @@ Vault.mainMenu = new Ext.tree.TreePanel({
         listeners: {
 			click: { 
 					fn: function(){
-							console.info(Vault.project_grid_config)
 							Vault.mainPanel.replace(new Vault.Grid(Vault.project_grid_config))
 					},
 					scope: this,

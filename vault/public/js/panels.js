@@ -17,6 +17,18 @@ Vault.newResourceGrid = function(params, config){
 						Vault.newResourceForm(Vault.mainPanel, project_id)
 					},
 					scope: this,
+			 },{
+					text: 'Add Preview',
+					handler: function(){
+						Vault.newPreviewForm(Vault.mainPanel, 1)
+					},
+					scope: this,
+			 },{
+					text: 'Add Asset',
+					handler: function(){
+						Vault.newResourceForm(Vault.mainPanel, project_id)
+					},
+					scope: this,
 			 }]
 	}, config))
 	return grid

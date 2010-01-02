@@ -25,9 +25,17 @@ class ResourcesController(BaseController):
         if resource_id:
             c.resources = meta.Session.query(Resource).filter(Resource.id==resource_id).all()
         elif project_id:
-            c.resources = meta.Session.query(Project).filter(Project.id==project_id).first().children
+            q = meta.Session.query(Project).filter(Project.id==project_id).first()
+            if q:
+                c.resources = q.children
+            else:
+                c.resource = []
         elif parent_id:
-            c.resources = meta.Session.query(Resource).filter(Resource.id==parent_id).first().children
+            q = meta.Session.query(Resource).filter(Resource.id==parent_id).first().children
+            if q:
+                c.resources = q.children
+            else:
+                c.resource = []
         else:
             c.resources = meta.Session.query(self._poly_class_).all()
         if format in ['js','json']:
@@ -36,17 +44,21 @@ class ResourcesController(BaseController):
             return to_json({self._classname() : c.resources})
         return render("/%s/index.mako" % self._classname())
 
-    def create(self):
+    def _before_create(self):pass
+
+    def create(self, commit=True):
         """POST /projects: Create a new item"""
         # url('projects')
-        resource = self._poly_class_(**self.params[self._classname()])
-        meta.Session.add(resource)
-        parent_id = int(self.params[self._classname()].get('parent_id', None))
+        self._before_create()
+        c.resource = self._poly_class_(**self.params[self._classname()])
+        meta.Session.add(c.resource)
+        parent_id = self.params[self._classname()].get('parent_id', None)
         if parent_id:
-            parent = meta.Session.query(Resource).filter(Resource.id==parent_id).first()
-            parent.children.append(resource)
-        meta.Session.commit()
-        return to_json({ self._classname() : resource, "success" : True})
+            parent = meta.Session.query(Resource).filter(Resource.id==int(parent_id)).first()
+            parent.children.append(c.resource)
+        if commit:
+            meta.Session.commit()
+        return to_json({ self._classname() : c.resource, "success" : True})
 
     def new(self, format='html'):
         """GET /projects/new: Form to create a new item"""

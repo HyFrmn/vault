@@ -12,7 +12,7 @@ Vault.Dialog = Ext.extend(Ext.Window, {
 	plain: true,
 	layout: 'fit',
 
-	width: 400,
+	width: 600,
 	height: 300,
 
 	initComponent: function(config){
@@ -48,8 +48,12 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	standardSubmit: false,
 	resultPanel: null,
 	defaultValues:{},
+	fileUpload: false,
+	
 	initComponent: function(config){
 	// Called during component initialization
+		Ext.apply(this, config);
+		
 	this.store = new Ext.data.Store({
 		
 		proxy: new Ext.data.HttpProxy({
@@ -61,30 +65,38 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 			fields: ['name', 'type', 'title', 'value'],
 		})
 	})
-	console.info(this.defaultValues)
 	this.form = new Ext.FormPanel({
-		frame: true,
-		bodyStyle: 'padding:5px 5px 0',
 		url: this.submitUrl,
 		method: 'POST',
-		standardSubmit: this.standardSubmit,
 		defaults: {
 			width: 250
 		},
 		defaultType: 'textfield',
+		fileUpload: true,
 		buttons: [{
 			text: 'Save',
 			handler: function(){
-				this.form.getForm().submit({
-					params: this.form.getForm().getValues(),
-					success: function(){
-						this.load_results()
-					},
-					failure: function(f, a){
-						alert(a.failureType)
-					},
-					scope: this
-				})
+				if (this.fileUpload){
+					Ext.Ajax.request({
+						form : this.form.getForm().getEl().dom,
+						url: this.submitUrl,
+						method: 'POST',
+						isUpload: this.fileUpload,
+						success: this.load_results,
+						failure: alert,
+						scope: this,
+					})
+					this.close()
+				} else {
+					this.form.getForm().submit({
+						method: 'POST',
+						url: this.submitUrl,
+						success: this.load_results,
+						failure: alert,
+						scope: this,
+						params: this.form.getForm().getValues(),
+						})
+				}
 				this.close()
 			},
 			scope: this
@@ -100,7 +112,13 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	// be overriden here or new properties (e.g. items, tools, buttons) 
 	// can be added, eg:
 	Ext.apply(this, {
-		items: this.form,
+		items: new Ext.Panel( {
+			plain: true,
+			layout: 'fit',
+			items: this.form,
+			frame: true,
+			bodyStyle: 'padding:5px 5px 0',
+			}),
 	});
 
 	// Before parent code
@@ -121,18 +139,50 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	},
 
 	load_callback: function(arguments){
-		console.info('Adding Form Fields. ' + this.store.getCount())
+		this.title_field = null
+		this.name_field = null
 		
+		xpr = /(\w+)\[(\w+)\]/
+		this.form.removeAll()
+		cmpindex = 0
 		this.store.each(function(r){
+			match = xpr.exec(r.data.name)
+			if (match){
+				obj = match[1]
+				field = match[2]
+			} else {
+				field = r.data.name
+			}
 			this.form.add({
 				name: r.data.name,
 				fieldLabel: r.data.title,
 				xtype: r.data.type,
-				value: r.data.value
+				value: r.data.value,
+				enableKeyEvents: true,
+				itemId: field,
 			})
+			
+			if (field=='title'){
+				this.title_field = this.form.getComponent(field)
+			}
+			if (field=='name'){
+				this.name_field = this.form.getComponent(field)
+			}
+			
 		}, this)
+		if (this.name_field && this.title_field){
+			this.title_field.on('keyup',function(){
+                title = this.title_field.getValue(),
+                name = title.toLowerCase()
+                name = name.replace(/ /g, '_')
+                re = /[^a-z_]/g
+                name = name.replace(re, '')
+                this.name_field.setValue(name)
+            },
+            this)
+		}
 		
-	Vault.FormDialog.superclass.show.apply(this)
+		Vault.FormDialog.superclass.show.apply(this)
 	},
 	
 	load_results: function(){
@@ -165,5 +215,18 @@ Vault.newProjectForm = function(resultPanel){
 		submitUrl: '/projects',
 		resultPanel: resultPanel,
 			})
+	dialog.show()
+}
+
+Vault.newPreviewForm = function(resultPanel, parent_id){
+	dialog = new Vault.FormDialog({
+		title: 'New Preview',
+		storeUrl: '/previews/new.json',
+		submitUrl: '/previews.json',
+		storeParams: { parent_id: parent_id },
+		resultPanel: resultPanel,
+		fileUpload: true,
+			})
+		
 	dialog.show()
 }

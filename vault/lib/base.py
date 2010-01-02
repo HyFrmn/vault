@@ -11,7 +11,7 @@ from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render
 
 import vault.model as model
-from vault.model import meta, Resource, Project
+from vault.model import *
 
 map_pattern = re.compile(r'^(?P<dict>[A-Za-z-_]+)\[(?P<key>[A-Za-z-_]+)\]$')
 
@@ -21,7 +21,8 @@ __all__ = ['meta',
            'to_json',
            'BaseController',
            'Resource',
-           'Project',]
+           'Project',
+           'Preview']
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
