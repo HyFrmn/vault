@@ -5,6 +5,8 @@ from resource import Resource
 class Project(Resource):
     __tablename__ = 'projects'
 
+    icon = '/icons/folder.png'
+
     # Relational
     resource_id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'project'}

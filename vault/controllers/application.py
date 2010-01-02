@@ -11,8 +11,11 @@ def _build_menu_item(item):
     if item:
         data = {'text' : item.title, 
             'id' : '%s:%s' % (item._classname, item.id)}
-        if not item.children:
-            data['leaf'] = True
+        data['icon'] = item.icon
+        if not isinstance(item, Project):
+            if not item.children:
+                data['leaf'] = True
+                
         return data
 
 

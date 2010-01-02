@@ -19,6 +19,8 @@ class Connection(Base):
 class Resource(Base):
     __tablename__ = 'resources'
     
+    icon = '/icons/page.png'
+    
     # Relational
     id = Column(Integer, primary_key=True, autoincrement=True)
     type = Column(String(30))

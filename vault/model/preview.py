@@ -5,6 +5,8 @@ from resource import Resource
 class Preview(Resource):
     __tablename__ = 'previews'
 
+    icon = '/icons/image.png'
+
     # Relational
     resource_id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'preview'}
