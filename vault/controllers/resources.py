@@ -89,7 +89,12 @@ class ResourcesController(BaseController):
 
     def show(self, id, format='html'):
         """GET /projects/id: Show a specific item"""
-        # url('project', id=ID)
+        c.resources = meta.Session.query(Resource).filter(Resource.id==id).all()
+        if format in ['js','json']:
+            #Render JSON
+            response.headers['Content-Type'] = 'application/javascript'
+            return to_json({self._classname() : c.resources})
+        return render("/%s/index.mako" % self._classname())
 
     def edit(self, id, format='html'):
         """GET /projects/id/edit: Form to edit an existing item"""

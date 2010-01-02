@@ -1,5 +1,7 @@
 Ext.ns('Vault')
 
+Vault.menu_view_map = {}
+
 Vault.LayoutPanel = Ext.extend(Ext.Panel, {
 	// Prototype Defaults, can be overridden by user's config object
 	layout: 'fit',
@@ -88,9 +90,10 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     	listeners: {
     		load: {
     			fn: function(tl, n, r){
-    				n.resource_id = n.id.split(':')[1]
+		    		Ext.each(Ext.decode(r.responseText), function(i){
+		                Vault.menu_view_map[i.id] = i.view
+		    		})
     			},
-    			scope: this,
     		},
     	},
     }),
@@ -98,20 +101,14 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     listeners: {
 		beforeappend: {
 			fn: function(tree, parent, node){
-					node.on("click", function(){
-						tmp = node.id.split(':')
-						type = tmp[0]
-						id = tmp[1]
-						view = null
-						resource_types = ['resource', 'project', 'preview']
-						if ( resource_types.indexOf(type) != -1 ){
-							view = Vault.newResourceDetails(id, { resultPanel: Vault.mainPanel })
-						}
-						if (view) {
-							Vault.mainPanel.replace(view)
-						}
-					})
-				}
+	       		node.on("click", function(){
+	       			view = Vault.menu_view_map[node.id]
+	       			if (view) {
+	       				Vault.mainPanel.replace(view)
+	       			}
+	       		})
+				},
+			scope: this
 		}
 	},
     
