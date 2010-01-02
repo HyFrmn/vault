@@ -27,7 +27,27 @@ Vault.LayoutPanel = Ext.extend(Ext.Panel, {
 		this.removeAll()
 		this.add(panel)
 		this.doLayout()
-	}
+	},
+	
+	loadLayout : function(params){
+		Ext.Ajax.request({
+		   url: 'views.json',
+		   success: this.loadLayout_callback,
+		   scope: this,
+		   params: {
+		       'my-header': 'foo',
+		   },
+		   params: params,
+		   method: 'GET',
+		})
+	},
+
+	loadLayout_callback : function(r, o){
+	    obj = Ext.decode(r.responseText)
+	    panel = new Vault.LayoutPanel({items: obj})
+	    console.info(panel)
+	    this.replace(panel)
+	},
 });
 
 //register xtype to allow for lazy initialization

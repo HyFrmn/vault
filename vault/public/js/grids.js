@@ -92,6 +92,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
 				root: this.storeRoot,
 			}),
 		})
+		this.resultPanel = eval(this.resultPanel)
     },
 
     onRender:function() {

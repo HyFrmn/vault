@@ -22,6 +22,8 @@ def make_map():
     map.connect('/', controller='application', action='index')
     map.resource('project', 'projects')
     map.resource('resource', 'resources')
+    map.resource('view', 'views')
+
 
     map.connect('/{controller}', action='index')
     map.connect('/{controller}/{action}')
