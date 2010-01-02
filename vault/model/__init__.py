@@ -17,7 +17,7 @@ def init_model(engine):
     meta.Session.configure(bind=engine)
     meta.engine = engine
 
-from vault.model.resource import Resource
+from vault.model.resource import Resource, Connection
 from vault.model.project import Project
 
 ## Classes for reflected tables may be defined here, but the table and

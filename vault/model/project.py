@@ -11,3 +11,14 @@ class Project(Resource):
 
     # Data
     client = Column(String(255))
+    
+    def to_dict(self):
+        data = Resource.to_dict(self)
+        data['client'] = str(self.client)
+        return data
+
+    @classmethod
+    def new_form_fields(cls):
+        fields = Resource.new_form_fields()
+        fields.insert(2, ('client', 'Client'))
+        return fields

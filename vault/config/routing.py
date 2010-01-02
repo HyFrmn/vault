@@ -19,10 +19,11 @@ def make_map():
     map.connect('/error/{action}/{id}', controller='error')
 
     # CUSTOM ROUTES HERE
-    map.connect('/', controller='projects', action='index')
-    map.connect('/{controller}.{format}', action='index')
+    map.connect('/', controller='application', action='index')
+    map.resource('project', 'projects')
+    map.resource('resource', 'resources')
+
     map.connect('/{controller}', action='index')
-    map.connect('/{controller}/{action}.{format}')
     map.connect('/{controller}/{action}')
     map.connect('/{controller}/{action}/{id}.{format}')
     map.connect('/{controller}/{action}/{id}')
