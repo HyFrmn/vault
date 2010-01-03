@@ -33,11 +33,3 @@ Vault.newResourceGrid = function(params, config){
 	}, config))
 	return grid
 }
-
-Vault.newResourceDetails = function(id, config){
-	// soft config (can be changed from outside)
-	details = new Vault.Details(Ext.apply({
-		rid: id,
-	}, config))
-	return details
-}
