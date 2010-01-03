@@ -4,30 +4,11 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	// soft config (can be changed from outside)
 	border:false,
 	title: 'Details',
-	storeUrl: '/resources.json',
-	storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'image'],
-	storeRoot: "resource",
-	storeParams: {},
+	url: '/resources.json',
+	params: {},
 	title: "Resources",
 	storeId: 0,
 	autoScroll: true,
-
-	template: new Ext.XTemplate(
-			'<div class="details">',
-			'<tpl for=".">',
-			'<img src="{image}"><div class="details-info">',
-			'<p>',
-			'<b>Title:</b>',
-			'<span>{title}</span>',
-			'</p>',
-			'<p>',
-			'<b>Last Modified:</b>',
-			'<span>{modified}</span></div>',
-			'<p>{description}</p>',
-			'</p>',
-			'</div>',
-			'</tpl>',
-	'</div>'),
 
 	initComponent:function(config) {
 	// {{{
@@ -43,31 +24,22 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	// call parent
 	Vault.Details.superclass.initComponent.apply(this, arguments);
 
-	// after parent code here, e.g. install event handlers
-	this.store = new Ext.data.Store({
-		proxy: new Ext.data.HttpProxy({
-			url: this.storeUrl,
-			method: 'GET',
-		}),
-		reader: new Ext.data.JsonReader({
-			idProperty: 'id',
-			fields: this.storeFields,
-			root: this.storeRoot,
-		}),
-	}),
-	this.store.load({
-		params: this.storeParams,
-		callback: this.updateDetails,
+	Ext.Ajax.request({
+		params: this.params,
+		success: this.success_callback,
 		scope: this,
+		url: this.url,
 	})
 },
 
-updateDetails: function(){
+success_callback: function(response, result, type){
+	console.info(response)
+	obj = Ext.decode(response.responseText)
 	detailsEl = this.body
-	record = this.store.getById(this.storeId)
-	if (record){
-		this.template.overwrite(detailsEl, record.data)
-		this.setTitle(record.data.title)
+	if (obj){
+		tmpl = new Ext.XTemplate(obj.tmpl)
+		tmpl.overwrite(detailsEl, obj.data)
+		this.setTitle(obj.data.title)
 	}
 },
 

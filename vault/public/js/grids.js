@@ -39,6 +39,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     storeParams: {},
     storeFields: ['id', 'name', 'title', 'description', 'created', 'modified'],
     storeRoot: "resource",
+    parentId: null,
     title: "Resources",
     resultPanel: null,
     columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
@@ -59,11 +60,13 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     }),
     
     listeners:{
-			rowdblclick: function( gridObj, rowIndex, event) {
-		record = this.store.getAt(rowIndex);
-		if (this.resultPanel){
-			this.resultPanel.replace(Vault.newResourceDetails(record['id']))
-		}
+		rowdblclick: function( gridObj, rowIndex, event) {
+			record = this.store.getAt(rowIndex);
+			console.info(record)
+			console.info(this.resultPanel)
+			if (this.resultPanel){
+				this.resultPanel.replace(Vault.newResourceDetails(record['id']))
+			}
 	}
 	},
 
@@ -93,6 +96,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
 			}),
 		})
 		this.resultPanel = eval(this.resultPanel)
+		console.info(this.resultPanel)
     },
 
     onRender:function() {

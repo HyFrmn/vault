@@ -7,6 +7,23 @@ from vault.lib.base import *
 
 log = logging.getLogger(__name__)
 
+tmpl = """<div class="details">
+    <tpl for=".">
+        <img src="{image}"><div class="details-info">
+        {image}
+        <p>
+            <b>Title:</b>
+            <span>{title}</span>
+        </p>
+        <p>
+            <b>Last Modified:</b>
+            <span>{modified}</span></div>
+            <p>{description}</p>
+        </p>
+    </tpl>
+</div>
+"""
+
 class ResourcesController(BaseController):
     """REST Controller styled on the Atom Publishing Protocol"""
     # To properly map this controller, ensure your config/routing.py
@@ -50,6 +67,7 @@ class ResourcesController(BaseController):
         """POST /projects: Create a new item"""
         # url('projects')
         self._before_create()
+        log.info('Creating Resource, %s' % self.params[self._classname()])
         c.resource = self._poly_class_(**self.params[self._classname()])
         meta.Session.add(c.resource)
         parent_id = self.params[self._classname()].get('parent_id', None)
@@ -58,7 +76,7 @@ class ResourcesController(BaseController):
             parent.children.append(c.resource)
         if commit:
             meta.Session.commit()
-        return to_json({ self._classname() : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'storeId' : c.resource.id }})
+        return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'url' : '/resources/%d.json' % c.resource.id }})
 
     def new(self, format='html'):
         """GET /projects/new: Form to create a new item"""
@@ -89,11 +107,11 @@ class ResourcesController(BaseController):
 
     def show(self, id, format='html'):
         """GET /projects/id: Show a specific item"""
-        c.resources = meta.Session.query(Resource).filter(Resource.id==id).all()
+        c.resources = meta.Session.query(self._poly_class_).filter(Resource.id==id).first()
         if format in ['js','json']:
             #Render JSON
             response.headers['Content-Type'] = 'application/javascript'
-            return to_json({self._classname() : c.resources})
+            return to_json({'data' : c.resources, 'tmpl' : tmpl})
         return render("/%s/index.mako" % self._classname())
 
     def edit(self, id, format='html'):

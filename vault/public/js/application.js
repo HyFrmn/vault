@@ -2,6 +2,8 @@
 
 /*global Ext, Application */
 
+
+
 Ext.ns('Vault');
 
 // application main entry point

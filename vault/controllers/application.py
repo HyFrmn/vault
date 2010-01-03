@@ -15,9 +15,9 @@ def _build_menu_item(item):
         if not isinstance(item, Project):
             if not item.children:
                 data['leaf'] = True
-                data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id}
+                data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'url' : '/resources/%d.json' % item.id }
         else:
-            data['view'] = { 'xtype' : 'vault.grid', 'title' : item.title, 'params' : {'project_id' : item.id}}
+            data['view'] = { 'xtype' : 'vault.grid', 'title' : item.title, 'resultPanel' : 'Vault.mainPanel', 'params' : {'project_id' : item.id}}
         return data
 
 

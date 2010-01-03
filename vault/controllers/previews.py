@@ -20,6 +20,7 @@ class PreviewsController(ResourcesController):
     def _before_create(self):
         permanent_store = config['uploads.previews']
         myfile = self.params['preview']['image']
+        print myfile.filename
         filepath = str(myfile.filename.lstrip(os.sep))
         fullpath = os.path.join(permanent_store, filepath)
         permanent_file = open(fullpath, 'w')

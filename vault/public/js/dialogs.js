@@ -82,7 +82,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 						url: this.submitUrl,
 						method: 'POST',
 						isUpload: this.fileUpload,
-						success: this.submit_success_callback,
+						success: this.ajax_submit_success_callback,
 						failure: alert,
 						scope: this,
 					})
@@ -91,7 +91,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 					this.form.getForm().submit({
 						method: 'POST',
 						url: this.submitUrl,
-						success: this.submit_success_callback,
+						success: this.form_submit_success_callback,
 						failure: alert,
 						scope: this,
 						params: this.form.getForm().getValues(),
@@ -185,14 +185,24 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 		Vault.FormDialog.superclass.show.apply(this)
 	},
 	
-	submit_success_callback: function(response, result, type){
+	ajax_submit_success_callback: function(response, options){
+		console.info(response.responseText)
+		obj = Ext.decode(response.responseText)
+		this.switch_view(obj)
+	},
+
+	form_submit_success_callback: function(response, result, type){
 		obj = Ext.decode(result.response.responseText)
+		this.switch_view(obj)
+	},
+	
+	switch_view: function(obj){
 		if (this.resultPanel){
 			this.resultPanel.removeAll()
 			this.resultPanel.add(obj.view)
 			this.resultPanel.doLayout()
 		}
-	}
+	},
 });
 
 //register xtype to allow for lazy initialization

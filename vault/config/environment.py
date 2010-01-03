@@ -44,4 +44,4 @@ def load_environment(global_conf, app_conf):
     # CONFIGURATION OPTIONS HERE (note: all config options will override
     # any Pylons config options)
     config['uploads.root'] = os.path.join(root, 'public')
-    config['uploads.previews'] = os.path.join(config['uploads.root'], 'previews')
+    config['uploads.previews'] = os.path.join(config['uploads.root'], 'imgs', 'previews')
