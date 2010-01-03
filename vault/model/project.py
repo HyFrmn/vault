@@ -24,6 +24,15 @@ class Project(Resource):
         data['client'] = str(self.client)
         return data
 
+    def grid_config(self):
+        data = Resource.grid_config(self)
+        data['storeFields'].append('client')
+        data['columns'].insert(1, self.config_grid_column('Client', 'client'))
+        data['title'] = self.title
+        data['tbar'] = [{'xtype' : 'button', 'text' : 'New Asset'}]
+        data['storeParams'] = { 'project_id' : self.id }
+        return data
+
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()

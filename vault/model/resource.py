@@ -66,6 +66,24 @@ class Resource(Base):
         return self.__class__.__name__.lower()
     _classname = property(_get_classname)
 
+    def grid_config(self):
+        data = {
+            'xtype' : 'vault.grid',
+            'storeUrl' : '/resources.json',
+            'storeFields' : ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
+            'storeRoot' : "resource",
+            'title' : "Resources",
+            'columns' : [self.config_grid_column('Title', 'title'),
+              self.config_grid_column('Type', 'type'),
+              self.config_grid_column('Created', 'created'),
+              self.config_grid_column('Description', 'description')],
+            }
+        return data
+
+    @classmethod
+    def config_grid_column(cls, label, field, width=200, sort=True):
+        return { 'header': label, 'width' : width, 'dataIndex' : field, 'sortable' : sort}
+
     @classmethod
     def new_form_fields(cls):
         return [('title', 'Title'),
