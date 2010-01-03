@@ -32,10 +32,10 @@ class Project(Resource):
                          'menu' : {
                                    'items' : [{'xtype' : 'vault.open_form_dialog_button',
                                               'text' : 'New Asset',
-                                              'dialogConfig' : self.new_dialog_config(self.id, type_='resources')
+                                              'dialogConfig' : self.new_dialog_config(self.id, type_='assets', title='New Asset (%s)' % self.title)
                                            },{'xtype' : 'vault.open_form_dialog_button',
                                               'text' : 'New Preview',
-                                              'dialogConfig' : self.new_dialog_config(self.id, type_='previews')
+                                              'dialogConfig' : self.new_dialog_config(self.id, type_='previews', title='New Preview (%s)' % self.title)
                                            }]
                                    }
                          }]

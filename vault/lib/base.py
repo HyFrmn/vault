@@ -22,7 +22,8 @@ __all__ = ['meta',
            'BaseController',
            'Resource',
            'Project',
-           'Preview']
+           'Preview',
+           'Asset']
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
