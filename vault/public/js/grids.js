@@ -1,36 +1,5 @@
 Ext.ns("Vault");
 
-Vault.resource_fields = ['id', 'name', 'title', 'description', 'created', 'modified']
-
-Vault.resource_grid_config = {
-	storeUrl: '/resources.json',
-    storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
-    storeRoot: "resource",
-    title: "Resources",
-    columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
-              {header: 'Type', width: 200, sortable: true, dataIndex: 'type'},
-              {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
-              {header: 'Description', dataIndex: 'description'}],
-    tbar: [{
-					text: 'Add Resource',
-					handler: function(){
-							Vault.newResourceForm()
-						}
-					}]
-}
-
-Vault.project_grid_config = {
-	storeUrl: '/projects.json',
-    storeFields: Vault.resource_grid_config.storeFields,
-    storeRoot: "project",
-    title: "Projects",
-    columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
-              {header: 'Client', dataIndex: 'client'},
-              {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
-              {header: 'Description', dataIndex: 'description'}],
-}
-Vault.project_grid_config.storeFields.push('client')
-
 Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
  
     // soft config (can be changed from outside)
@@ -65,7 +34,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
 			console.info(record)
 			console.info(this.resultPanel)
 			if (this.resultPanel){
-				this.resultPanel.replace(Vault.newResourceDetails(record['id']))
+				this.resultPanel.replace({ xtype: 'vault.details', rid: record['id']})
 			}
 	}
 	},
