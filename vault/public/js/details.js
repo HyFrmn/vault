@@ -4,7 +4,8 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	// soft config (can be changed from outside)
 	border:false,
 	title: 'Details',
-	url: '/resources.json',
+	rtype: 'resources',
+	rid: 0,
 	params: {},
 	title: "Resources",
 	storeId: 0,
@@ -28,7 +29,7 @@ Vault.Details = Ext.extend(Ext.Panel, {
 		params: this.params,
 		success: this.success_callback,
 		scope: this,
-		url: this.url,
+		url: '/' + this.rtype + '/' + this.rid + '.json'
 	})
 },
 

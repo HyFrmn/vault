@@ -37,7 +37,7 @@ Vault.newResourceGrid = function(params, config){
 Vault.newResourceDetails = function(id, config){
 	// soft config (can be changed from outside)
 	details = new Vault.Details(Ext.apply({
-		url: '/resources/' + id + '.json',
+		rid: id,
 	}, config))
 	return details
 }

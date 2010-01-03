@@ -41,7 +41,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     storeRoot: "resource",
     parentId: null,
     title: "Resources",
-    resultPanel: null,
+    resultPanel: "Vault.mainPanel",
     columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
     {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
     {header: 'Description', dataIndex: 'description'}],
@@ -119,5 +119,5 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
  
 // register xtype
 Ext.reg('vault.grid', Vault.Grid); 
- 
+
 // eof

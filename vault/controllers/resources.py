@@ -76,7 +76,7 @@ class ResourcesController(BaseController):
             parent.children.append(c.resource)
         if commit:
             meta.Session.commit()
-        return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'url' : '/resources/%d.json' % c.resource.id }})
+        return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'rid' : c.resource.id }})
 
     def new(self, format='html'):
         """GET /projects/new: Form to create a new item"""
