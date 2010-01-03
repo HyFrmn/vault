@@ -19,6 +19,9 @@ class Connection(Base):
 class Resource(Base):
     __tablename__ = 'resources'
     
+    #Black Magic
+    _classmap = {}
+    
     icon = '/icons/page.png'
     
     # Relational
@@ -44,6 +47,10 @@ class Resource(Base):
         now = datetime.datetime.now()
         self.created = now
         self.modified = now
+    
+    @classmethod
+    def _register(cls, class_):
+        cls._classmap[class_.__tablename__] = class_
 
     def __str__(self):
         return str(self.title)
@@ -65,6 +72,29 @@ class Resource(Base):
     def _get_classname(self):
         return self.__class__.__name__.lower()
     _classname = property(_get_classname)
+
+    @classmethod
+    def new_dialog_config(cls, *args, **kwargs):
+        t = kwargs.get('type_')
+        func = cls._classmap.get(t, cls)._new_dialog_config
+        print func
+        config = func(*args, **kwargs)
+        print config
+        return config
+        
+    @classmethod
+    def _new_dialog_config(cls, parent_id=None, title='New Resource', resultPanel='Vault.mainPanel', type_=None):
+        if not type_:
+            type_ = cls.__tablename__
+        data = {
+                'title' : title,
+                'storeUrl' : '/%s/new.json' % type_,
+                'submitUrl' : '/%s' % type_,
+                'resultPanel' : resultPanel,
+            }
+        if parent_id:
+            data['storeParams'] = { 'parent_id' : parent_id }
+        return data
 
     def grid_config(self):
         data = {

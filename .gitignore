@@ -2,4 +2,4 @@
 *~
 *.pyc
 development.db
-vault/public/previews/*
+vault/public/imgs/

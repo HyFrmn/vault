@@ -26,9 +26,12 @@ Vault.LayoutPanel = Ext.extend(Ext.Panel, {
 	},
 
 	replace: function(panel){
+		this.setVisible(false)
 		this.removeAll()
 		this.add(panel)
 		this.doLayout()
+		this.setVisible(true)
+		this.getEl().fadeIn({duration:2})
 	},
 	
 	loadLayout : function(params){

@@ -24,3 +24,13 @@ class Preview(Resource):
         fields = Resource.new_form_fields()
         fields.insert(2, ('image', 'Image', 'fileuploadfield'))
         return fields
+
+    @classmethod
+    def _new_dialog_config(cls, *args, **kwargs):
+        data = Resource._new_dialog_config(*args, **kwargs)
+        data['fileUpload'] = True
+        print data
+        return data
+
+#Black Magic
+Resource._register(Preview)

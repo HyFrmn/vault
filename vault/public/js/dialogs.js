@@ -183,6 +183,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 		}
 		
 		Vault.FormDialog.superclass.show.apply(this)
+		this.resultPanel = eval(this.resultPanel)
 	},
 	
 	ajax_submit_success_callback: function(response, options){

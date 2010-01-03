@@ -27,7 +27,18 @@ class Project(Resource):
     def grid_config(self):
         data = Resource.grid_config(self)
         data['title'] = self.title
-        data['tbar'] = [{'xtype' : 'button', 'text' : 'New Asset'}]
+        data['tbar'] = [{
+                         'text' : 'New',
+                         'menu' : {
+                                   'items' : [{'xtype' : 'vault.open_form_dialog_button',
+                                              'text' : 'New Asset',
+                                              'dialogConfig' : self.new_dialog_config(self.id, type_='resources')
+                                           },{'xtype' : 'vault.open_form_dialog_button',
+                                              'text' : 'New Preview',
+                                              'dialogConfig' : self.new_dialog_config(self.id, type_='previews')
+                                           }]
+                                   }
+                         }]
         data['storeParams'] = { 'project_id' : self.id }
         return data
 
