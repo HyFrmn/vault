@@ -25,6 +25,10 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	// call parent
 	Vault.Details.superclass.initComponent.apply(this, arguments);
 
+	this.update_details()
+},
+
+update_details: function(){
 	Ext.Ajax.request({
 		params: this.params,
 		success: this.success_callback,
@@ -34,7 +38,6 @@ Vault.Details = Ext.extend(Ext.Panel, {
 },
 
 success_callback: function(response, result, type){
-	console.info(response)
 	obj = Ext.decode(response.responseText)
 	detailsEl = this.body
 	if (obj){

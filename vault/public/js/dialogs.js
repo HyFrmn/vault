@@ -49,11 +49,12 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	resultPanel: null,
 	defaultValues:{},
 	fileUpload: false,
-	
+	editForm: false,
+	waitMsg: "Contacting Server.",
 	initComponent: function(config){
 	// Called during component initialization
 		Ext.apply(this, config);
-		
+
 	this.store = new Ext.data.Store({
 		
 		proxy: new Ext.data.HttpProxy({
@@ -62,7 +63,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 		}),
 		reader: new Ext.data.JsonReader({
 			idProperty: 'name',
-			fields: ['name', 'type', 'title', 'value'],
+			fields: ['name', 'xtype', 'fieldLabel', 'value', 'disabled'],
 		})
 	})
 	this.form = new Ext.FormPanel({
@@ -85,6 +86,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 						success: this.ajax_submit_success_callback,
 						failure: alert,
 						scope: this,
+						waitMsg: this.waitMsg,
 					})
 					this.close()
 				} else {
@@ -95,9 +97,9 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 						failure: alert,
 						scope: this,
 						params: this.form.getForm().getValues(),
-						})
+						waitMsg: this.waitMsg,
+					})
 				}
-				this.close()
 			},
 			scope: this
 		},{
@@ -141,8 +143,9 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	load_callback: function(arguments){
 		this.title_field = null
 		this.name_field = null
-		
+		console.info(this.store.getCount())
 		xpr = /(\w+)\[(\w+)\]/
+		file_xpr = /file/
 		this.form.removeAll()
 		cmpindex = 0
 		this.store.each(function(r){
@@ -153,22 +156,20 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 			} else {
 				field = r.data.name
 			}
-			this.form.add({
-				name: r.data.name,
-				fieldLabel: r.data.title,
-				xtype: r.data.type,
-				value: r.data.value,
-				enableKeyEvents: true,
-				itemId: field,
-			})
 			
+			this.form.add(r.data)
+			console.info(field)
 			if (field=='title'){
 				this.title_field = this.form.getComponent(field)
 			}
 			if (field=='name'){
 				this.name_field = this.form.getComponent(field)
 			}
-			
+			if (file_xpr.test(r.data.xtype)){
+				this.fileUpload = true
+				console.info("Upload File.")
+				console.info(this.fileUpload)
+			}
 		}, this)
 		if (this.name_field && this.title_field){
 			this.title_field.on('keyup',function(){
@@ -187,7 +188,6 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	},
 	
 	ajax_submit_success_callback: function(response, options){
-		console.info(response.responseText)
 		obj = Ext.decode(response.responseText)
 		this.switch_view(obj)
 	},
@@ -198,6 +198,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	},
 	
 	switch_view: function(obj){
+		this.close()
 		if (this.resultPanel){
 			this.resultPanel.removeAll()
 			this.resultPanel.add(obj.view)
@@ -209,36 +210,23 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 //register xtype to allow for lazy initialization
 Ext.reg('vault.formdialog', Vault.FormDialog);
 
-Vault.newResourceForm = function(resultPanel, parent_id){
-	dialog = new Vault.FormDialog({
-		title: 'New Resource',
-		storeUrl: '/resources/new.json',
-		storeParams: { parent_id: parent_id },
-		submitUrl: '/resources',
-		resultPanel: resultPanel,
-			})
-	dialog.show()
-}
+Vault.RestfulFormDialog = Ext.extend(Vault.FormDialog, {
+	rtype: 'resources',
+	rid: 1,
+	initComponent: function(config){
+	// Called during component initialization
+		Ext.apply(this, config);
+		console.info(this)
+		if (this.editForm){
+			this.storeUrl = [this.rtype, this.rid, 'edit.json'].join('/')
+			this.submitUrl = [this.rtype, this.rid].join('/')
+		} else {
+			this.storeUrl = [this.rtype, 'new.json'].join('/')
+			this.submitUrl = [this.rtype].join('/')
+		}
+		console.info(this)
+		Vault.RestfulFormDialog.superclass.initComponent.apply(this, arguments)
+	},
+})
 
-Vault.newProjectForm = function(resultPanel){
-	dialog = new Vault.FormDialog({
-		title: 'New Project',
-		storeUrl: '/projects/new.json',
-		submitUrl: '/projects',
-		resultPanel: resultPanel,
-			})
-	dialog.show()
-}
-
-Vault.newPreviewForm = function(resultPanel, parent_id){
-	dialog = new Vault.FormDialog({
-		title: 'New Preview',
-		storeUrl: '/previews/new.json',
-		submitUrl: '/previews.json',
-		storeParams: { parent_id: parent_id },
-		resultPanel: resultPanel,
-		fileUpload: true,
-			})
-		
-	dialog.show()
-}
+Ext.reg('vault.restfulformdialog', Vault.RestfulFormDialog)

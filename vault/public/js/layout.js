@@ -26,12 +26,9 @@ Vault.LayoutPanel = Ext.extend(Ext.Panel, {
 	},
 
 	replace: function(panel){
-		this.setVisible(false)
 		this.removeAll()
 		this.add(panel)
 		this.doLayout()
-		this.setVisible(true)
-		this.getEl().fadeIn({duration:2})
 	},
 	
 	loadLayout : function(params){
@@ -150,7 +147,7 @@ Vault.viewport = function(){
 
 	Vault.toolbarPanel.add(toolbar)
 	
-	Vault.mainPanel.add(Vault.newResourceGrid({ project_id : 1}, { resultPanel: Vault.mainPanel }))
+	Vault.mainPanel.add({xtype: 'vault.grid', storeParams: {project_id : 1}})
 	Vault.menuPanel.add(Vault.mainMenu)
 	
 	new Ext.Viewport({

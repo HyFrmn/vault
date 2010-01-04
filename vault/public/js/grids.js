@@ -11,6 +11,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     parentId: null,
     title: "Resources",
     resultPanel: "Vault.mainPanel",
+    selectedRow: null,
     columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
     {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
     {header: 'Description', dataIndex: 'description'}],
@@ -23,21 +24,10 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         columns: this.columns,
     }),
 
-    
     sm: new Ext.grid.RowSelectionModel({
     	
     }),
-    
-    listeners:{
-		rowdblclick: function( gridObj, rowIndex, event) {
-			record = this.store.getAt(rowIndex);
-			console.info(record)
-			console.info(this.resultPanel)
-			if (this.resultPanel){
-				this.resultPanel.replace({ xtype: 'vault.details', rid: record['id']})
-			}
-	}
-	},
+
 
     initComponent:function(config) {
 
@@ -47,10 +37,19 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         // apply config
         Ext.apply(this, config);
         Ext.apply(this.initialConfig, config);
- 
         // call parent
         Vault.Grid.superclass.initComponent.apply(this, arguments);
- 
+        this.on("rowdblclick", function( gridObj, rowIndex, event) {
+    			console.info(this)
+    			record = this.store.getAt(rowIndex)
+    			resultPanel = eval(this.resultPanel)
+    			console.info(resultPanel)
+    			if (resultPanel){
+    				console.info("Replacing Panel.")
+    				resultPanel.replace({ xtype: 'vault.details', rid: record['id']})
+    			}
+    		}, this)
+
         // after parent code here, e.g. install event handlers
 		this.store = new Ext.data.Store({
 			proxy: new Ext.data.HttpProxy({
@@ -64,28 +63,16 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
 				root: this.storeRoot,
 			}),
 		})
-		this.resultPanel = eval(this.resultPanel)
-		console.info(this.resultPanel)
-    },
 
-    onRender:function() {
- 
-        // before parent code
-        this.store.url = this.storeUrl
  		this.store.load({
  			params:this.storeParams
  		})
-        // call parent
-        Vault.Grid.superclass.onRender.apply(this, arguments);
- 
-        // after parent code, e.g. install event handlers on rendered components
- 
-    } // eo function onRender
-
- 
-    // any other added/overrided methods
-}); // eo extend
- 
+    },
+    
+    getSelected: function(){
+    	return this.sm.getSelected()
+    },
+})
 // register xtype
 Ext.reg('vault.grid', Vault.Grid); 
 

@@ -89,12 +89,10 @@ class ResourcesController(BaseController):
 
     def update(self, id):
         """PUT /projects/id: Update an existing item"""
-        # Forms posted to this method should contain a hidden field:
-        #    <input type="hidden" name="_method" value="PUT" />
-        # Or using helpers:
-        #    h.form(url('project', id=ID),
-        #           method='put')
-        # url('project', id=ID)
+        c.resource = meta.Session.query(self._poly_class_).filter(Resource.id==id).first()
+        c.resource.update(self.params[self._classname()])
+        meta.Session.commit()
+        return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'rid' : c.resource.id }})
 
     def delete(self, id):
         """DELETE /projects/id: Delete an existing item"""
@@ -116,7 +114,9 @@ class ResourcesController(BaseController):
 
     def edit(self, id, format='html'):
         """GET /projects/id/edit: Form to edit an existing item"""
-        # url('edit_project', id=ID)
+        c.resource = meta.Session.query(self._poly_class_).filter(Resource.id==id).first()
+        if format in ['json', 'js']:
+            return to_json(self._poly_class_.form_schema(c.resource.edit_form_fields()))
 
     def dump(self):
         return str(self.parse_params(request.params))

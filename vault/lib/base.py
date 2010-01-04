@@ -39,7 +39,7 @@ class JSONEncoder(simplejson.JSONEncoder):
         return simplejson.JSONEncoder.default(self, obj)
 
 def to_json(obj):
-    return simplejson.dumps(obj, cls=JSONEncoder)
+    return simplejson.dumps(obj, cls=JSONEncoder, indent=4)
 
 class BaseController(WSGIController):
     def __call__(self, environ, start_response):

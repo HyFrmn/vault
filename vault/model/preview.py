@@ -22,8 +22,13 @@ class Preview(Resource):
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()
-        fields.insert(2, ('image', 'Image', 'fileuploadfield'))
+        fields.insert(2, 'image', { 'fieldLabel' : 'Image', 'xtype':'fileuploadfield'})
         return fields
+
+    def _edit_form_fields(self, **kwargs):
+        fields = Resource._edit_form_fields(self.__class__)
+        del fields['image']
+        return fields 
 
     @classmethod
     def _new_dialog_config(cls, *args, **kwargs):

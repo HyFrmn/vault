@@ -7,6 +7,25 @@ from vault.lib.base import *
 
 log = logging.getLogger(__name__)
 
+def dashboard(project):
+    data = [{
+    'layout' : 'border',
+    'items' : [project.grid_config(region='center', resultPanel="Ext.getCmp('dashboard-details')"),{
+                'region' : 'south',
+                'id' : 'dashboard-details',
+                'height' : 300,
+                'xtype': 'vault.layoutpanel',
+                'items':{
+                         'xtype' : 'vault.details',
+                         'rid' : 1,
+                        },
+                'split' : True,
+                'title' : None,
+                'autoScroll' : True,
+            }]
+}]
+    return data
+
 def _build_menu_item(item):
     if item:
         data = {'text' : item.title, 
@@ -17,7 +36,7 @@ def _build_menu_item(item):
                 data['leaf'] = True
                 data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'rid' : item.id }
         else:
-            data['view'] = item.grid_config()
+            data['view'] = dashboard(item)
         return data
 
 

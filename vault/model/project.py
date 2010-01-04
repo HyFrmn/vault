@@ -24,26 +24,34 @@ class Project(Resource):
         data['client'] = str(self.client)
         return data
 
-    def grid_config(self):
+    def grid_config(self,  **kwargs):
         data = Resource.grid_config(self)
         data['title'] = self.title
         data['tbar'] = [{
                          'text' : 'New',
+                         'layout' : 'fit',
                          'menu' : {
                                    'items' : [{'xtype' : 'vault.open_form_dialog_button',
                                               'text' : 'New Asset',
-                                              'dialogConfig' : self.new_dialog_config(self.id, type_='assets', title='New Asset (%s)' % self.title)
+                                              'dialogConfig' : self.new_dialog_config(rtype='assets', title='New Asset (%s)' % self.title, parent_id=self.id), 
+                                              'storeParams': { 'parent_id' : self.id }
                                            },{'xtype' : 'vault.open_form_dialog_button',
                                               'text' : 'New Preview',
-                                              'dialogConfig' : self.new_dialog_config(self.id, type_='previews', title='New Preview (%s)' % self.title)
+                                              'dialogConfig' : self.new_dialog_config(rtype='previews', title='New Preview (%s)' % self.title, parent_id=self.id) ,
                                            }]
                                    }
+                         },{
+                         'text' : 'Edit',
+                         'xtype' : 'vault.open_form_dialog_button',
+                         'dialogConfig' : self.edit_dialog_config(kwargs),
+                         'parentPanel' : 'project-grid',
                          }]
         data['storeParams'] = { 'project_id' : self.id }
+        data.update(kwargs)
         return data
 
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()
-        fields.insert(2, ('client', 'Client'))
+        fields['client'] = {'fieldLabel' : 'Client'}
         return fields
