@@ -41,7 +41,6 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         Vault.Grid.superclass.initComponent.apply(this, arguments);
         this.sm.on("rowselect", function(sm, index, record) {
     			resultPanel = eval(this.resultPanel)
-    			console.info(index)
     			if (resultPanel){
     				resultPanel.replace({ xtype: 'vault.details', rid: record['id'], rtype: record.data.type})
     			}

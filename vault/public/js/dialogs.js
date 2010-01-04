@@ -130,7 +130,6 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	load_callback: function(arguments){
 		this.title_field = null
 		this.name_field = null
-		console.info(this.store.getCount())
 		xpr = /(\w+)\[(\w+)\]/
 		file_xpr = /file/
 		this.form.removeAll()
@@ -145,7 +144,6 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 			}
 			
 			this.form.add(r.data)
-			console.info(field)
 			if (field=='title'){
 				this.title_field = this.form.getComponent(field)
 			}
@@ -154,8 +152,6 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 			}
 			if (file_xpr.test(r.data.xtype)){
 				this.fileUpload = true
-				console.info("Upload File.")
-				console.info(this.fileUpload)
 			}
 		}, this)
 		if (this.name_field && this.title_field){
@@ -203,7 +199,6 @@ Vault.RestfulFormDialog = Ext.extend(Vault.FormDialog, {
 	initComponent: function(config){
 	// Called during component initialization
 		Ext.apply(this, config);
-		console.info(this)
 		if (this.editForm){
 			this.storeUrl = [this.rtype, this.rid, 'edit.json'].join('/')
 			this.submitUrl = [this.rtype, this.rid].join('/')
@@ -211,7 +206,6 @@ Vault.RestfulFormDialog = Ext.extend(Vault.FormDialog, {
 			this.storeUrl = [this.rtype, 'new.json'].join('/')
 			this.submitUrl = [this.rtype].join('/')
 		}
-		console.info(this)
 		Vault.RestfulFormDialog.superclass.initComponent.apply(this, arguments)
 	},
 })
@@ -294,7 +288,6 @@ Vault.SelectResourceDialog = Ext.extend(Vault.Dialog, {
 		this.store.load({
 			params: this.storeParams,
 			handler: function(){
-				console.info(this)
 				this.show()
 			},
 			scope: this,

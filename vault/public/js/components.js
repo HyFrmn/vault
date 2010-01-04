@@ -16,7 +16,6 @@ Vault.OpenFormDialogButton = Ext.extend(Ext.Button, {
 	
 		this.on("click", function(){
 			config = this.dialogConfig
-			console.info(config)
 			cmp = Ext.getCmp(this.parentPanel)
 			dynamic = {}
 			if (cmp){
@@ -24,7 +23,6 @@ Vault.OpenFormDialogButton = Ext.extend(Ext.Button, {
 				rid = record.data.id
 				config = Ext.apply(config, { rid: rid, rtype: 'resources' })
 			}
-			console.info(config)
 			dialog = new Vault.RestfulFormDialog(config)
 			dialog.show()
 		}, this)
