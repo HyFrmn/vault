@@ -24,7 +24,6 @@ class PreviewsController(ResourcesController):
         #Get Uploaded File
         type_ = self._poly_class_.__tablename__
         myfile = self.params[type_]['image']
-        print myfile.filename
         filepath = str(myfile.filename.lstrip(os.sep))
         fullpath = os.path.join(permanent_store, filepath)
         fullpath = os.path.splitext(fullpath)[0] + '.jpg'
@@ -37,6 +36,7 @@ class PreviewsController(ResourcesController):
 
         #Resize into web preview.
         params = { 'temppath' : temppath, 'fullpath' : fullpath, 'width' : 600, 'height' : 400 }
+        print params
         cmd = "convert %(temppath)s -resize %(width)dx%(height)d\> -size %(width)dx%(height)d xc:black +swap -gravity center -composite %(fullpath)s" % params
         subprocess.call(cmd, shell=True)
         os.remove(temppath)

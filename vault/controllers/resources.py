@@ -29,13 +29,13 @@ class ResourcesController(BaseController):
             if q:
                 c.resources = q.children
             else:
-                c.resource = []
+                c.resources = []
         elif parent_id:
             q = meta.Session.query(Resource).filter(Resource.id==parent_id).first().children
             if q:
                 c.resources = q.children
             else:
-                c.resource = []
+                c.resources = []
         else:
             c.resources = meta.Session.query(self._poly_class_).all()
         if format in ['js','json']:
@@ -59,6 +59,15 @@ class ResourcesController(BaseController):
         if parent_id:
             parent = meta.Session.query(Resource).filter(Resource.id==int(parent_id)).first()
             parent.children.append(c.resource)
+        for k, v in c.resource.__dict__.copy().iteritems():
+            print k, v
+            if k.endswith('_id'):
+                id_attr = getattr(c.resource, k)
+                relation_attr = k[:-3]
+                relation = getattr(c.resource, relation_attr)
+                if id_attr and not relation:
+                        relation = meta.Session.query(Resource).filter(Resource.id==int(id_attr)).first()
+                        setattr(c.resource, relation_attr, relation)
         if commit:
             meta.Session.commit()
         return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'rid' : c.resource.id, 'rtype' : c.resource.__tablename__ }})

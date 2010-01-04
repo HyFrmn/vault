@@ -39,6 +39,9 @@ class Project(Resource):
                                               'dialogConfig' : self.new_dialog_config(rtype='assets', title='New Asset (%s)' % self.title, parent_id=self.id), 
                                               'storeParams': { 'parent_id' : self.id }
                                            },{'xtype' : 'vault.open_form_dialog_button',
+                                              'text' : 'New Task',
+                                              'dialogConfig' : self.new_dialog_config(rtype='tasks', title='New Task (%s)' % self.title, parent_id=self.id) ,
+                                           },{'xtype' : 'vault.open_form_dialog_button',
                                               'text' : 'New Preview',
                                               'dialogConfig' : self.new_dialog_config(rtype='previews', title='New Preview (%s)' % self.title, parent_id=self.id) ,
                                            }]

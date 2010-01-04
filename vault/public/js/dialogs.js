@@ -48,7 +48,7 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 			}),
 			reader: new Ext.data.JsonReader({
 				idProperty: 'name',
-				fields: ['name', 'fieldLabel', 'xtype', 'value', 'itemId', 'enableKeyEvents'],
+				fields: ['name', 'fieldLabel', 'xtype', 'value', 'itemId', 'enableKeyEvents', 'rtype'],
 			})
 	})
 		
