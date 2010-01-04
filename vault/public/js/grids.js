@@ -12,6 +12,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     resultPanel: null,
     selectedRow: null,
     columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
+	{header: 'Type', width: 200, sortable: true, dataIndex: 'type'},
     {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
     {header: 'Description', dataIndex: 'description'}],
 
