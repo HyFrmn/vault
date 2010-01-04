@@ -152,7 +152,7 @@ class Resource(Base):
         return simplejson.dumps(self.to_dict())
 
     def _get_classname(self):
-        return self.__class__.__name__.lower()
+        return self.__tablename__
     _classname = property(_get_classname)
 
     @classmethod
@@ -191,7 +191,7 @@ class Resource(Base):
             'xtype' : 'vault.grid',
             'storeUrl' : '/resources.json',
             'storeFields' : ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
-            'storeRoot' : "resource",
+            'storeRoot' : "resources",
             'title' : "Resources",
             'id' : '%s-grid' % self.__class__.__name__.lower(),
             'columns' : [self.config_grid_column('Title', 'title'),
@@ -246,7 +246,7 @@ class Resource(Base):
                 if value:
                     field['value'] = value
             if name != '_method':
-                field['name'] = '%s[%s]' % (cls.__name__.lower(), name)
+                field['name'] = '%s[%s]' % (cls.__tablename__, name)
             else:
                 field['name'] = name
             field_schemas.append(field)
@@ -265,4 +265,4 @@ class Resource(Base):
                 type_ = 'textarea'
             elif isinstance(column_cls, String):
                 type_ = 'textfield'
-        return { 'name' : '%s[%s]' % (cls.__name__.lower(), field), 'title' : title, 'type' : type_, 'value' : value }
+        return { 'name' : '%s[%s]' % (cls.__tablename__, field), 'title' : title, 'type' : type_, 'value' : value }

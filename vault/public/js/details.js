@@ -25,15 +25,17 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	// call parent
 	Vault.Details.superclass.initComponent.apply(this, arguments);
 
-	this.update_details()
+	if (this.rid != 0){
+		this.update_details(this.rtype,this.rid)
+	}
 },
 
-update_details: function(){
+update_details: function(rtype, rid){
 	Ext.Ajax.request({
 		params: this.params,
 		success: this.success_callback,
 		scope: this,
-		url: '/' + this.rtype + '/' + this.rid + '.json'
+		url: '/' + rtype + '/' + rid + '.json'
 	})
 },
 
@@ -44,6 +46,8 @@ success_callback: function(response, result, type){
 		tmpl = new Ext.XTemplate(obj.tmpl)
 		tmpl.overwrite(detailsEl, obj.data)
 		this.setTitle(obj.data.title)
+		this.rid = obj.data.rid
+		this.rtype - obj.data.rtype
 	}
 },
 

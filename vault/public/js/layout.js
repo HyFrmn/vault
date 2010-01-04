@@ -132,12 +132,10 @@ Vault.mainMenu = new Ext.tree.TreePanel({
 Vault.viewport = function(){
 	toolbar = new Ext.Toolbar();
 	
-	new_menu = [{
-		text: "New Project",
-		handler: function(){
-			Vault.newProjectForm(Vault.mainPanel)
-		},
-	}]
+	new_menu = [{'xtype' : 'vault.open_form_dialog_button',
+        'text' : 'New Project',
+        'dialogConfig' : { rtype: 'projects'} ,
+     }]
 	
 	toolbar.add({
 		text: "New",

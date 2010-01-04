@@ -19,7 +19,8 @@ class PreviewsController(ResourcesController):
     
     def _before_create(self):
         permanent_store = config['uploads.previews']
-        myfile = self.params['preview']['image']
+        type_ = self._poly_class_.__tablename__
+        myfile = self.params[type_]['image']
         print myfile.filename
         filepath = str(myfile.filename.lstrip(os.sep))
         fullpath = os.path.join(permanent_store, filepath)
@@ -29,5 +30,5 @@ class PreviewsController(ResourcesController):
         myfile.file.close()
         permanent_file.close()
         
-        self.params['preview']['image'] = fullpath[len(config['uploads.root']):]
+        self.params[type_]['image'] = fullpath[len(config['uploads.root']):]
         return True

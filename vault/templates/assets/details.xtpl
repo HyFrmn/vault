@@ -1,4 +1,5 @@
 <div class="content">
+        <img src="{preview_image}">
         <h2> {title} </h2>
         <strong style="display: none">{name}</strong>
         <p>Created at {created}</p>

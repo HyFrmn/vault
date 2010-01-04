@@ -16,24 +16,11 @@ Vault.Dialog = Ext.extend(Ext.Window, {
 	height: 300,
 
 	initComponent: function(config){
-	// Called during component initialization
-
-	// Config object has already been applied to 'this' so properties can 
-	// be overriden here or new properties (e.g. items, tools, buttons) 
-	// can be added, eg:
-	Ext.apply(this, {
+		Ext.apply(this, {
 		
-	});
-
-	// Before parent code
-
-	// Call parent (required)
-	Vault.Dialog.superclass.initComponent.apply(this, arguments);
-
-	// After parent code
-	// e.g. install event handlers on rendered component
-},
-
+		});
+		Vault.Dialog.superclass.initComponent.apply(this, arguments);
+	}
 });
 
 //register xtype to allow for lazy initialization
@@ -54,18 +41,18 @@ Vault.FormDialog = Ext.extend(Vault.Dialog, {
 	initComponent: function(config){
 	// Called during component initialization
 		Ext.apply(this, config);
-
 	this.store = new Ext.data.Store({
-		
-		proxy: new Ext.data.HttpProxy({
-			url: this.storeUrl,
-			method: 'GET',
-		}),
-		reader: new Ext.data.JsonReader({
-			idProperty: 'name',
-			fields: ['name', 'xtype', 'fieldLabel', 'value', 'disabled'],
-		})
+			proxy: new Ext.data.HttpProxy({
+				url: this.storeUrl,
+				method: 'GET',
+			}),
+			reader: new Ext.data.JsonReader({
+				idProperty: 'name',
+				fields: ['name', 'fieldLabel', 'xtype', 'value', 'itemId', 'enableKeyEvents'],
+			})
 	})
+		
+		
 	this.form = new Ext.FormPanel({
 		url: this.submitUrl,
 		method: 'POST',
@@ -230,3 +217,102 @@ Vault.RestfulFormDialog = Ext.extend(Vault.FormDialog, {
 })
 
 Ext.reg('vault.restfulformdialog', Vault.RestfulFormDialog)
+
+//register xtype to allow for lazy initialization
+Ext.reg('vault.formdialog', Vault.FormDialog);
+
+Vault.SelectResourceDialog = Ext.extend(Vault.Dialog, {
+	rtype: 'resources',
+	rid: 1,
+	storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'type', 'image'],
+	storeParams: {},
+	selected: null,
+	callback: null,
+	tpl: ['<tpl for=".">',
+          '<div class="thumb-wrap" id="{name}">',
+          '<div class="thumb"><img src="{image}" title="{name}"></div>',
+          '<span class="x-editable">{title}</span></div>',
+          '</tpl>',
+          '<div class="x-clear"></div>'],
+	initComponent: function(config){
+	// Called during component initialization
+		Ext.apply(this, config);
+		Vault.SelectResourceDialog.superclass.initComponent.apply(this, arguments)
+		this.addEvents("submitted")
+		this.storeUrl = [this.rtype + '.json'].join('/')
+		this.store = new Ext.data.Store({
+			proxy: new Ext.data.HttpProxy({
+				url: this.storeUrl,
+				method: 'GET',
+			}),
+			reader: new Ext.data.JsonReader({
+				idProperty: 'name',
+				root: this.rtype,
+				fields: this.storeFields,
+			})
+		})
+		this.view = new Ext.DataView({
+	        store: this.store,
+	        tpl:  new Ext.XTemplate(this.tpl),
+	        autoHeight:true,
+	        multiSelect: true,
+	        overClass:'x-view-over',
+	        itemSelector:'div.thumb-wrap',
+	        emptyText: 'No images to display',
+	        singleSelect: true,
+	        multiSelect: false,
+	    })
+		this.details = new Vault.Details()
+		this.add({
+				layout: 'border',
+				items: [{
+					region: 'center',
+					autoScroll: true,
+					items: this.view,
+					border: false,
+					},{
+						region: 'east',
+						items: this.details,
+						width: '150',
+						layout: 'fit',
+						split: true,
+					}],
+				buttons: [{ 
+							text : 'Select',
+							handler: function(){
+								this.submit()
+							},
+							scope: this,
+						},{
+							text:'Cancel',
+							'handler' : function(){
+								this.close()
+							},
+							scope: this,
+						}],
+				})
+		this.store.load({
+			params: this.storeParams,
+			handler: function(){
+				console.info(this)
+				this.show()
+			},
+			scope: this,
+		})
+		this.view.on("selectionchange", function(selection){
+			record = this.view.getSelectedRecords()[0]
+			if (record){
+				this.selected = record
+				this.details.update_details(record.data.type, record.data.id)
+			}
+		}, this)
+	},
+	submit: function(){
+		if (this.callback){
+			this.callback.apply(this.scope, [this, this.selected])
+		}
+		this.close()
+		this.fireEvent("submitted", this.selected)
+	}
+})
+Ext.reg('vault.selectresourcedialog', Vault.SelectResourceDialog)

@@ -15,7 +15,7 @@ class ResourcesController(BaseController):
     _poly_class_ = Resource
 
     def _classname(self):
-        return self._poly_class_.__name__.lower()
+        return self._poly_class_.__tablename__
 
     def index(self, format='html'):
         """GET /projects: All items in the collection"""
@@ -61,7 +61,7 @@ class ResourcesController(BaseController):
             parent.children.append(c.resource)
         if commit:
             meta.Session.commit()
-        return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'rid' : c.resource.id }})
+        return to_json({ 'data' : c.resource, "success" : True, 'view' : { 'xtype' : 'vault.details', 'rid' : c.resource.id, 'rtype' : c.resource.__tablename__ }})
 
     def new(self, format='html'):
         """GET /projects/new: Form to create a new item"""

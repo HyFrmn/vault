@@ -34,7 +34,7 @@ def _build_menu_item(item):
         if not isinstance(item, Project):
             if not item.children:
                 data['leaf'] = True
-                data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'rid' : item.id }
+                data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'rid' : item.id, 'rtype' : item._classname }
         else:
             data['view'] = dashboard(item)
         return data

@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.orm import relation
 
 from resource import Resource
+from preview import Preview
 
 class Asset(Resource):
     __tablename__ = 'assets'
@@ -8,14 +10,18 @@ class Asset(Resource):
     icon = '/icons/pill.png'
 
     # Relational
-    resource_id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'asset'}
 
     # Data
-    preview = Column(Integer, ForeignKey('previews.resource_id'))
+    preview_id = Column(Integer, ForeignKey('previews.id'))
+    preview = relation(Preview, primaryjoin=preview_id==Preview.__table__.c.id)
 
     def to_dict(self):
         data = Resource.to_dict(self)
+        if self.preview:
+            for k, v in self.preview.to_dict().iteritems():
+                data['preview_' + k] = v
         return data
 
     def grid_config(self):
@@ -39,4 +45,5 @@ class Asset(Resource):
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()
+        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield' }
         return fields

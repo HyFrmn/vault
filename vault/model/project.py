@@ -1,6 +1,8 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
+from sqlalchemy.orm import relation
 
 from resource import Resource
+from preview import Preview
 
 class Project(Resource):
     __tablename__ = 'projects'
@@ -8,12 +10,13 @@ class Project(Resource):
     icon = '/icons/folder.png'
 
     # Relational
-    resource_id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'project'}
 
     # Data
     client = Column(String(255))
-    preview = Column(Integer, ForeignKey('previews.resource_id'))
+    #preview_id = Column(Integer, ForeignKey('previews.id'))
+    #preview = relation(Preview)
 
     root_dir = Column(String(255))
     asset_dir = Column(String(255))
@@ -54,4 +57,5 @@ class Project(Resource):
     def new_form_fields(cls):
         fields = Resource.new_form_fields()
         fields['client'] = {'fieldLabel' : 'Client'}
+        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield' }
         return fields

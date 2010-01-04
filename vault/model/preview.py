@@ -8,7 +8,7 @@ class Preview(Resource):
     icon = '/icons/image.png'
 
     # Relational
-    resource_id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'preview'}
 
     # Data
