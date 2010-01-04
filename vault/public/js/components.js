@@ -53,6 +53,9 @@ Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
      * @cfg {Object} buttonCfg A standard {@link Ext.Button} config object.
      */
 
+
+    rtype: 'previews',
+
     // private
     readOnly: true,
 
@@ -119,7 +122,8 @@ Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
             click: function() {
                 dialog = new Vault.SelectResourceDialog({
                 	callback: this.select_callback,
-                	scope: this
+                	scope: this,
+					rtype: this.rtype,
                 })
                 dialog.show()
             }

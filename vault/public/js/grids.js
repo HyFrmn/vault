@@ -1,7 +1,6 @@
 Ext.ns("Vault");
 
 Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
- 
     // soft config (can be changed from outside)
     border:false,
     storeUrl: '/resources.json',
@@ -10,7 +9,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     storeRoot: "resources",
     parentId: null,
     title: "Resources",
-    resultPanel: "Vault.mainPanel",
+    resultPanel: null,
     selectedRow: null,
     columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
     {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
@@ -41,6 +40,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         Vault.Grid.superclass.initComponent.apply(this, arguments);
         this.sm.on("rowselect", function(sm, index, record) {
     			resultPanel = eval(this.resultPanel)
+				console.info(resultPanel.id)
     			if (resultPanel){
     				resultPanel.replace({ xtype: 'vault.details', rid: record['id'], rtype: record.data.type})
     			}

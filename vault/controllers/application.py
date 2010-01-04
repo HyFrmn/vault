@@ -10,20 +10,41 @@ log = logging.getLogger(__name__)
 def dashboard(project):
     data = [{
     'layout' : 'border',
-    'items' : [project.grid_config(region='center', resultPanel="Ext.getCmp('dashboard-details')"),{
-                'region' : 'south',
-                'id' : 'dashboard-details',
-                'height' : 300,
-                'xtype': 'vault.layoutpanel',
-                'items':{
-                         'xtype' : 'vault.details',
-                         'rid' : 1,
-                        },
-                'split' : True,
-                'title' : None,
-                'autoScroll' : True,
-            }]
-}]
+    'items' : [project.grid_config(region='center', resultPanel="Ext.getCmp('dashboard-details')"),
+             {
+              'xtype' : 'tabpanel',
+              'region' : 'south',
+              'height' : 325,
+              'activeTab' : 0,
+              'items' : [{
+                         'title' : 'Details',
+                         'id' : 'dashboard-details',
+                         'xtype': 'vault.layoutpanel',
+                         'autoScroll' : True,
+                         'split' : True,
+                         'height': 325,
+                         'items':[{
+                                   'xtype' : 'vault.details',
+                                   'rid' : 1,
+                                   'title' : None,
+                                   'autoScroll' : True,
+                                   }]
+                         },{
+                         'title' : 'Assets',
+                         'id' : 'dashboard-assets',
+                         'xtype': 'vault.grid',
+                         'autoScroll' : True,
+                         'split' : True,
+                         'height': 325,
+                         'items':[{
+                                   'xtype' : 'vault.details',
+                                   'rid' : 1,
+                                   'title' : None,
+                                   'autoScroll' : True,
+                                   }]
+                         }]
+               }]
+    }]
     return data
 
 def _build_menu_item(item):
