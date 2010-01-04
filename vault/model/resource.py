@@ -142,7 +142,7 @@ class Resource(Base):
         data['id'] = int(self.id)
         data['name'] = str(self.name)
         data['title'] = str(self.title)
-        data['type'] = str(self.__class__.__name__.lower())
+        data['type'] = str(self.__tablename__)
         data['description'] = str(self.description)
         data['created'] = self.created
         data['modified'] = self.modified

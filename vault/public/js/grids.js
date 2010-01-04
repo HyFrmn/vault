@@ -6,7 +6,7 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     border:false,
     storeUrl: '/resources.json',
     storeParams: {},
-    storeFields: ['id', 'name', 'title', 'description', 'created', 'modified'],
+    storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
     storeRoot: "resource",
     parentId: null,
     title: "Resources",
@@ -40,13 +40,11 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         // call parent
         Vault.Grid.superclass.initComponent.apply(this, arguments);
         this.on("rowdblclick", function( gridObj, rowIndex, event) {
-    			console.info(this)
     			record = this.store.getAt(rowIndex)
     			resultPanel = eval(this.resultPanel)
-    			console.info(resultPanel)
+    			console.info(record)
     			if (resultPanel){
-    				console.info("Replacing Panel.")
-    				resultPanel.replace({ xtype: 'vault.details', rid: record['id']})
+    				resultPanel.replace({ xtype: 'vault.details', rid: record['id'], rtype: record.data.type})
     			}
     		}, this)
 
