@@ -3,7 +3,7 @@ import datetime
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relation
-from meta import Base
+from meta import Base, Session
 
 from UserDict import DictMixin
 
@@ -96,10 +96,10 @@ class Connection(Base):
 
 class Resource(Base):
     __tablename__ = 'resources'
-    
+
     #Black Magic
     _classmap = {}
-    
+
     icon = '/icons/page.png'
     
     # Relational
@@ -109,19 +109,15 @@ class Resource(Base):
                         primaryjoin = id==Connection.__table__.c.parent_id,
                         secondaryjoin = Connection.__table__.c.child_id==id)
     __mapper_args__ = {'polymorphic_on' : type}
-    
+
     # Data
     name = Column(String(255))
     title = Column(String(255))
     description = Column(Text)
-    
+
     # Tracking
     created = Column(DateTime)
     modified = Column(DateTime)
-
-    def update(self, kwargs):
-        for k, v in kwargs.iteritems():
-            setattr(self, k, v)
 
     def __init__(self, **kwargs):
         if kwargs:
@@ -129,13 +125,29 @@ class Resource(Base):
         now = datetime.datetime.now()
         self.created = now
         self.modified = now
-    
+
     @classmethod
     def _register(cls, class_):
         cls._classmap[class_.__tablename__] = class_
 
+    def to_json(self):
+        return simplejson.dumps(self.to_dict())
+
+    def _get_classname(self):
+        return self.__tablename__
+    _classname = property(_get_classname)
+
     def __str__(self):
         return str(self.title)
+
+    def update(self, kwargs):
+        for k, v in kwargs.iteritems():
+            update_attr_name = '_update_' + str(k)
+            try:
+                update_attr = getattr(self, update_attr_name)
+                update_attr(v)
+            except AttributeError:
+                pass
 
     def to_dict(self):
         data = {}
@@ -147,13 +159,15 @@ class Resource(Base):
         data['created'] = self.created
         data['modified'] = self.modified
         return data
-    
-    def to_json(self):
-        return simplejson.dumps(self.to_dict())
 
-    def _get_classname(self):
-        return self.__tablename__
-    _classname = property(_get_classname)
+    def _update_name(self, name):
+        self.name = str(name)
+
+    def _update_title(self, title):
+        self.title = str(title)
+
+    def _update_description(self, description):
+        self.description = description
 
     @classmethod
     def new_dialog_config(cls, **kwargs):
@@ -219,7 +233,6 @@ class Resource(Base):
         if not self:
             self = cls
         data = self.new_form_fields()
-        print self
         del data['parent_id']
         data['name']['disabled'] = True
         data['_method'] = { 'xtype' : 'hidden', 'value' : 'PUT' }
@@ -233,7 +246,6 @@ class Resource(Base):
             except AttributeError:
                 pass
         return data
-
 
     @classmethod
     def form_schema(cls, field_defs, defaults=None):

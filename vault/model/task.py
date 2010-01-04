@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Time, Float
 from sqlalchemy.orm import relation
 
-from resource import Resource, odict
+from resource import Resource, odict, Session
 from asset import Asset
 
 class Task(Resource):
@@ -54,6 +54,18 @@ class Task(Resource):
         fields['asset'] = { 'fieldLabel' : 'Asset' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'assets' }
         fields['estimate'] = { 'fieldLabel' : 'Estimated Time' , 'xtype' : 'numberfield' }
         return fields
+
+    def _edit_form_fields(self):
+        return self.new_form_fields()
+
+    def _update_asset_id(self, asset_id):
+        try:
+            id = int(asset_id)
+        except ValueError:
+            id = 0
+        if id:
+            asset = Session.query(Resource).filter(Resource.id==id).first()
+            self.asset = asset
 
 #Black Magic
 Resource._register(Task)

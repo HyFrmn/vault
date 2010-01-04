@@ -92,7 +92,9 @@ Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
         }
         this.getEl().set({name: null})
         value = this.value
-        this.setValue(value.name)
+        if (value) {
+			this.setValue(value.name)
+		}
 
         var btnCfg = Ext.applyIf(this.buttonCfg || {}, {
             text: this.buttonText

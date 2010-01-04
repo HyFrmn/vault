@@ -19,6 +19,9 @@ class Preview(Resource):
         data['image'] = str(self.image)
         return data
 
+    def _update_image(self, image):
+        self.image = str(image)
+
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()

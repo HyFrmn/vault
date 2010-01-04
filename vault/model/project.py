@@ -21,11 +21,7 @@ class Project(Resource):
     root_dir = Column(String(255))
     asset_dir = Column(String(255))
     config_dir = Column(String(255))
-    
-    def to_dict(self):
-        data = Resource.to_dict(self)
-        data['client'] = str(self.client)
-        return data
+
 
     def grid_config(self,  **kwargs):
         data = Resource.grid_config(self)
@@ -51,14 +47,23 @@ class Project(Resource):
                          'xtype' : 'vault.open_form_dialog_button',
                          'dialogConfig' : self.edit_dialog_config(kwargs),
                          'parentPanel' : 'project-grid',
+                         'rtype' : 'resources',
                          }]
         data['storeParams'] = { 'project_id' : self.id }
         data.update(kwargs)
         return data
 
+    def to_dict(self):
+        data = Resource.to_dict(self)
+        data['client'] = str(self.client)
+        return data
+
+    def _update_client(self, client):
+        self.client = str(client)
+
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()
         fields['client'] = {'fieldLabel' : 'Client'}
-        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield' }
+        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'previews'}
         return fields

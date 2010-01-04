@@ -52,7 +52,7 @@ class ResourcesController(BaseController):
         """POST /projects: Create a new item"""
         # url('projects')
         self._before_create()
-        log.info('Creating Resource (%s), %s' % (self._poly_class_.__class__.__name__, self.params[self._classname()]))
+        log.info('Creating Resource (%s), %s' % (self._poly_class_.__tablename__, self.params[self._classname()]))
         c.resource = self._poly_class_(**self.params[self._classname()])
         meta.Session.add(c.resource)
         parent_id = self.params[self._classname()].get('parent_id', None)
