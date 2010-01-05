@@ -43,3 +43,13 @@ class PreviewsController(ResourcesController):
 
         self.params[type_]['image'] = fullpath[len(config['uploads.root']):]
         return True
+
+    def search_index(self):
+        asset_id = self.params.get('parent_id', None)
+        if asset_id:
+            asset = meta.Session.query(Asset).filter(Asset.id==asset_id).first()
+            if asset:
+                c.resources = meta.Session.query(Preview).filter(Preview.id==asset.preview_id).all()
+            else:
+                c.resources = []
+        return c.resources

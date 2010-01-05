@@ -78,21 +78,37 @@ Vault.ResourceDataView = Ext.extend(Ext.Panel, {
 	        multiSelect: false,
 	    })
 		this.details = new Vault.Details({listenTo: this})
+		this.search_field = new Ext.form.TextField({ enableKeyEvents: true})
+		this.search_field.on("keyup", function(){
+		  filter = this.search_field.getValue()
+		  xpr = new RegExp(filter)
+		  this.store.filter('name', xpr)
+		},this)
 		this.add({
 					region: 'center',
 					autoScroll: true,
 					items: this.view,
 					border: false,
-					},{
-						region: 'east',
-						items: this.details,
-						width: '250',
-						layout: 'fit',
-						split: true,
-						border:false,
-					})
-				
-		console.info("Loading " + this.storeUrl)
+				},{
+					region: 'east',
+					items: this.details,
+					width: '250',
+					layout: 'fit',
+					split: true,
+					border:false,
+				},{
+					region: 'north',
+					height: 32,
+					xtype: 'toolbar',
+					items: [{
+                             xtype: 'tbfill'
+                            },
+                            this.search_field,
+                            {
+                             xtype: 'button',
+                             text:  'Search',
+                            }]
+				})
 		this.store.load({
 			params: this.storeParams,
 		})

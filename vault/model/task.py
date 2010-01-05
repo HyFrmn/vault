@@ -50,7 +50,7 @@ class Task(Resource):
     @classmethod
     def new_form_fields(cls):
         #fields = Resource.new_form_fields()
-        fields = odict()
+        fields = Resource.new_form_fields()
         fields['asset'] = { 'fieldLabel' : 'Asset' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'assets' }
         fields['estimate'] = { 'fieldLabel' : 'Estimated Time' , 'xtype' : 'numberfield' }
         return fields

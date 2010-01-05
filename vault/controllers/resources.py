@@ -17,11 +17,11 @@ class ResourcesController(BaseController):
     def _classname(self):
         return self._poly_class_.__tablename__
 
-    def index(self, format='html'):
-        """GET /projects: All items in the collection"""
+    def search_index(self):
         resource_id = self.params.get('resource_id', None)
         parent_id = self.params.get('parent_id', None)
         project_id = self.params.get('project_id', None)
+        asset_id = self.params.get('asset_id', None)
         if resource_id:
             c.resources = meta.Session.query(Resource).filter(Resource.id==resource_id).all()
         elif project_id:
@@ -36,7 +36,12 @@ class ResourcesController(BaseController):
                 c.resources = q.children
             else:
                 c.resources = []
-        else:
+        return c.resources
+
+    def index(self, format='html'):
+        """GET /projects: All items in the collection"""
+        c.resources = self.search_index()
+        if not c.resources:
             c.resources = meta.Session.query(self._poly_class_).all()
         if format in ['js','json']:
             #Render JSON

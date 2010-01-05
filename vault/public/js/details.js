@@ -28,7 +28,6 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	// call parent
 	Vault.Details.superclass.initComponent.apply(this, arguments);
 	this.listenTo = eval(this.listenTo)
-	console.info('Listen to: ' + this.listenTo)
 	if(this.listenTo){
 		this.listenTo.on(this.listenToEvent, function(record){
 			this.update_details_from_record(record)

@@ -6,7 +6,8 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     searchParams: {},
     storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
     rtype: "resources",
-    parentId: null,
+    listenTo: null,
+    listenToEvent: "selectionchange",
     title: "Resources",
     resultPanel: null,
     selectedRow: null,
@@ -41,11 +42,17 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         Vault.Grid.superclass.initComponent.apply(this, arguments);
         this.sm.on("rowselect", function(sm, index, record) {
     			resultPanel = eval(this.resultPanel)
-				console.info(resultPanel.id)
     			if (resultPanel){
     				resultPanel.replace({ xtype: 'vault.details', rid: record['id'], rtype: record.data.type})
     			}
     		}, this)
+
+        this.listenTo = eval(this.listenTo)
+        if(this.listenTo){
+            this.listenTo.on(this.listenToEvent, function(record){
+                this.update_from_record(record)
+        }, this)
+        }
 
         // after parent code here, e.g. install event handlers
 		this.store = new Ext.data.Store({
@@ -64,13 +71,19 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
  			params:this.searchParams
  		})
     },
-    
+
+    update_from_record: function(record){
+		this.store.load({
+			params: { parent_id: record.data.id }
+		})
+	},
+
     getSelected: function(){
-    	return this.sm.getSelected()
+        return this.sm.getSelected()
     },
-    
+
     getUrl: function(){
-    	return ("/" + this.rtype + ".json")
+        return ("/" + this.rtype + ".json")
     }
 })
 // register xtype

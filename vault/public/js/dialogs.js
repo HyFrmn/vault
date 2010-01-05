@@ -257,19 +257,32 @@ Vault.SelectResourceDialog = Ext.extend(Vault.Dialog, {
 	        multiSelect: false,
 	    })
 		this.details = new Vault.Details()
+		this.search_field = new Ext.form.TextField({ enableKeyEvents: true})
+        this.search_field.on("keyup", function(){
+          filter = this.search_field.getValue()
+          xpr = new RegExp(filter)
+          this.store.filter('name', xpr)
+        },this)
 		this.add({
 				layout: 'border',
 				items: [{
-					region: 'center',
-					autoScroll: true,
-					items: this.view,
-					border: false,
+					     region: 'center',
+					     autoScroll: true,
+					     items: this.view,
+					     border: false,
 					},{
 						region: 'east',
 						items: this.details,
 						width: '150',
 						layout: 'fit',
 						split: true,
+					},{
+						region: 'north',
+						xtype: 'toolbar',
+						height: 32,
+						items: [{
+							xtype: 'tbfill'
+						  }, this.search_field]
 					}],
 				buttons: [{ 
 							text : 'Select',
