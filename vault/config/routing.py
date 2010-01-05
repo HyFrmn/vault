@@ -26,6 +26,7 @@ def make_map():
     map.resource('preview', 'previews')
     map.resource('asset', 'assets')
     map.resource('task', 'tasks')
+    map.resource('version', 'versions')
 
     map.connect('/{controller}', action='index')
     map.connect('/{controller}/{action}')

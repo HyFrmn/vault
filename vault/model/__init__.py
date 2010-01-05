@@ -6,7 +6,7 @@ from sqlalchemy import orm
 
 from vault.model import meta
 
-__all__ = ['meta', 'Resource', 'Project', 'Preview', 'Asset', 'Task']
+__all__ = ['meta', 'Resource', 'Project', 'Preview', 'Asset', 'Task', 'Version']
 
 def init_model(engine):
     """Call me before using any of the tables or classes in the model"""
@@ -24,6 +24,7 @@ from vault.model.project import Project
 from vault.model.preview import Preview
 from vault.model.asset import Asset
 from vault.model.task import Task
+from vault.model.version import Version
 
 ## Classes for reflected tables may be defined here, but the table and
 ## mapping itself must be done in the init_model function

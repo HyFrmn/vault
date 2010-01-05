@@ -43,6 +43,7 @@ Vault.ResourceDataView = Ext.extend(Ext.Panel, {
 	callback: null,
 	border: false,
 	layout: 'border',
+	tbarItems: [],
 	tpl: ['<tpl for=".">',
           '<div class="thumb-wrap" id="{name}">',
           '<div class="thumb"><img src="{preview_image}" title="{name}"></div>',
@@ -79,6 +80,8 @@ Vault.ResourceDataView = Ext.extend(Ext.Panel, {
 	    })
 		this.details = new Vault.Details({listenTo: this})
 		this.search_field = new Ext.form.TextField({ enableKeyEvents: true})
+		this.tbarItems.push({ xtype: 'tbfill' })
+		this.tbarItems.push(this.search_field)
 		this.search_field.on("keyup", function(){
 		  filter = this.search_field.getValue()
 		  xpr = new RegExp(filter)
@@ -100,14 +103,7 @@ Vault.ResourceDataView = Ext.extend(Ext.Panel, {
 					region: 'north',
 					height: 32,
 					xtype: 'toolbar',
-					items: [{
-                             xtype: 'tbfill'
-                            },
-                            this.search_field,
-                            {
-                             xtype: 'button',
-                             text:  'Search',
-                            }]
+					items: this.tbarItems,
 				})
 		this.store.load({
 			params: this.storeParams,

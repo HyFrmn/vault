@@ -16,6 +16,7 @@ class Asset(Resource):
     # Data
     preview_id = Column(Integer, ForeignKey('previews.id'))
     preview = relation(Preview, primaryjoin=preview_id==Preview.__table__.c.id)
+    #versions = relation("Version", primaryjoin="Version.__table__.c.asset_id"==id)
 
     def to_dict(self):
         data = Resource.to_dict(self)

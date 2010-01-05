@@ -11,11 +11,11 @@ def dashboard(project):
     data = [{
     'layout' : 'border',
     'items' : [{
-                'region' : 'north',
-                'xtype' : 'toolbar',
-                'height' : 32,
-                
-                'items' : [{'xtype' : 'vault.open_form_dialog_button',
+                   'region':'center',
+                   'id' : 'dashboard-grid',
+                   'rtype' : 'assets',
+                   'xtype' : 'vault.resourcedataview',
+                   'tbarItems' :  [{'xtype' : 'vault.open_form_dialog_button',
                            'text' : 'New Asset',
                            'dialogConfig' : project.new_dialog_config(rtype='assets', title='New Asset (%s)' % project.title, parent_id=project.id), 
                            'storeParams': { 'parent_id' : project.id }
@@ -25,18 +25,16 @@ def dashboard(project):
                         },{'xtype' : 'vault.open_form_dialog_button',
                            'text' : 'New Preview',
                            'dialogConfig' : project.new_dialog_config(rtype='previews', title='New Preview (%s)' % project.title, parent_id=project.id) ,
+                        },{'xtype' : 'vault.open_form_dialog_button',
+                           'text' : 'New Version',
+                           'dialogConfig' : project.new_dialog_config(rtype='versions', title='New Version (%s)' % project.title, parent_id=project.id) ,
                         },{
                           'text' : 'Edit',
                           'xtype' : 'vault.open_form_dialog_button',
                           'dialogConfig' : project.edit_dialog_config(),
                           'parentPanel' : "dashboard-grid",
                           'rtype' : 'resources',
-                        }],
-                },{
-                   'region':'center',
-                   'id' : 'dashboard-grid',
-                   'rtype' : 'assets',
-                   'xtype' : 'vault.resourcedataview',
+                        }]
                },{
                   'xtype' : 'tabpanel',
                   'region' : 'south',
@@ -59,8 +57,8 @@ def dashboard(project):
                                         'listenTo' : 'Ext.getCmp("dashboard-grid")',
                                         }]
                               },{
-                                 'title' : 'Assets',
-                                 'id' : 'dashboard-assets',
+                                 'title' : 'Versions',
+                                 'id' : 'dashboard-versions',
                                  'xtype': 'vault.layoutpanel',
                                  'autoScroll' : True,
                                  'split' : True,
@@ -70,7 +68,8 @@ def dashboard(project):
                                            'rid' : 1,
                                            'title' : None,
                                            'autoScroll' : True,
-                                           'rtype': 'assets',
+                                           'rtype': 'versions',
+                                           'listenTo': 'Ext.getCmp("dashboard-grid")',
                                            }]
                                  },{
                                     'title' : 'Previews',

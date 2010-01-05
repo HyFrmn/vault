@@ -22,6 +22,7 @@ class ResourcesController(BaseController):
         parent_id = self.params.get('parent_id', None)
         project_id = self.params.get('project_id', None)
         asset_id = self.params.get('asset_id', None)
+        c.resources = None
         if resource_id:
             c.resources = meta.Session.query(Resource).filter(Resource.id==resource_id).all()
         elif project_id:
@@ -31,7 +32,7 @@ class ResourcesController(BaseController):
             else:
                 c.resources = []
         elif parent_id:
-            q = meta.Session.query(Resource).filter(Resource.id==parent_id).first().children
+            q = meta.Session.query(Resource).filter(Resource.id==parent_id).first()
             if q:
                 c.resources = q.children
             else:
@@ -41,14 +42,17 @@ class ResourcesController(BaseController):
     def index(self, format='html'):
         """GET /projects: All items in the collection"""
         c.resources = self.search_index()
-        if not c.resources:
+        if c.resources is None:
             c.resources = meta.Session.query(self._poly_class_).all()
         if format in ['js','json']:
             #Render JSON
             response.headers['Content-Type'] = 'application/javascript'
             return to_json({self._classname() : c.resources})
         if format == 'xmlrpc':
-            return to_dict({self._classname() : c.resources})
+            output = []
+            for resource in c.resources:
+                output.append(resource.to_dict())
+            return { self._classname() : output }
         return render("/%s/index.mako" % self._classname())
 
     def _before_create(self):pass
@@ -109,6 +113,9 @@ class ResourcesController(BaseController):
             #Render JSON
             response.headers['Content-Type'] = 'application/javascript'
             return to_json({'data' : c.resource, 'tmpl' : render('/%s/details.xtpl' % self._classname())})
+        if format == 'xmlrpc':
+            output = c.resource.to_dict()
+            return { self._classname() : output }
         return render("/%s/details.mako" % self._classname())
 
     def edit(self, id, format='html'):

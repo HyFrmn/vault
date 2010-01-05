@@ -24,7 +24,8 @@ __all__ = ['meta',
            'Project',
            'Preview',
            'Asset',
-           'Task']
+           'Task',
+           'Version']
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
