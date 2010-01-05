@@ -1,10 +1,10 @@
 div.thumb-wrap {
 	background: #999;
-	width: 100px;
+	width: 160px;
 	height: 120px;
 	margin: 10px;
-	padding:10px;
-	float: right;
+	padding:15px;
+	float: left;
 }
 
 div.x-view-over {
@@ -16,6 +16,6 @@ div.x-view-selected {
 }
 
 div.thumb-wrap img {
-	width:80px;
-	height: 80px;
+	width:150px;
+	height: 100px;
 }

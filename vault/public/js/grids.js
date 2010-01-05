@@ -3,18 +3,17 @@ Ext.ns("Vault");
 Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     // soft config (can be changed from outside)
     border:false,
-    storeUrl: '/resources.json',
-    storeParams: {},
+    searchParams: {},
     storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
-    storeRoot: "resources",
+    rtype: "resources",
     parentId: null,
     title: "Resources",
     resultPanel: null,
     selectedRow: null,
     columns: [{header: 'Title', width: 200, sortable: true, dataIndex: 'title'},
-	{header: 'Type', width: 200, sortable: true, dataIndex: 'type'},
-    {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
-    {header: 'Description', dataIndex: 'description'}],
+              {header: 'Type', width: 200, sortable: true, dataIndex: 'type'},
+              {header: 'Created', width: 100, sortable: true, dataIndex: 'created'},
+              {header: 'Description', dataIndex: 'description'}],
 
 	colModel: new Ext.grid.ColumnModel({
         defaults: {
@@ -27,8 +26,9 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
     sm: new Ext.grid.RowSelectionModel({
     	singleSelect: true,
     }),
-
-
+    viewConfig: {
+    	forceFit: true
+    },
     initComponent:function(config) {
 
         var config = {
@@ -50,25 +50,28 @@ Vault.Grid = Ext.extend(Ext.grid.GridPanel, {
         // after parent code here, e.g. install event handlers
 		this.store = new Ext.data.Store({
 			proxy: new Ext.data.HttpProxy({
-				url: this.storeUrl,
+				url: this.getUrl(),
 				baseParams: this.storeParams,
 				method: 'GET',
 			}),
 			reader: new Ext.data.JsonReader({
 				idProperty: 'id',
 				fields: this.storeFields,
-				root: this.storeRoot,
+				root: this.rtype,
 			}),
 		})
-
  		this.store.load({
- 			params:this.storeParams
+ 			params:this.searchParams
  		})
     },
     
     getSelected: function(){
     	return this.sm.getSelected()
     },
+    
+    getUrl: function(){
+    	return ("/" + this.rtype + ".json")
+    }
 })
 // register xtype
 Ext.reg('vault.grid', Vault.Grid); 

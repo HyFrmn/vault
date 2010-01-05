@@ -120,7 +120,7 @@ Vault.mainMenu = new Ext.tree.TreePanel({
         listeners: {
 			click: { 
 					fn: function(){
-							Vault.mainPanel.replace(new Vault.Grid(Vault.project_grid_config))
+							Vault.mainPanel.replace(new Vault.Grid({ rtype : 'projects', resultPanel: Vault.mainPanel}))
 					},
 					scope: this,
 			}

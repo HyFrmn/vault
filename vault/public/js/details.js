@@ -10,7 +10,10 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	title: "Resources",
 	storeId: 0,
 	autoScroll: true,
-
+	listenTo: null,
+	listenToEvent: "selectionchange",
+	
+	
 	initComponent:function(config) {
 	// {{{
 	// hard coded (cannot be changed from outside)
@@ -24,7 +27,15 @@ Vault.Details = Ext.extend(Ext.Panel, {
 
 	// call parent
 	Vault.Details.superclass.initComponent.apply(this, arguments);
-
+	this.listenTo = eval(this.listenTo)
+	console.info('Listen to: ' + this.listenTo)
+	if(this.listenTo){
+		this.listenTo.on(this.listenToEvent, function(record){
+			this.update_details_from_record(record)
+		}, this)
+	}
+	
+	
 	if (this.rid != 0){
 		this.update_details(this.rtype,this.rid)
 	}
@@ -37,6 +48,10 @@ update_details: function(rtype, rid){
 		scope: this,
 		url: '/' + rtype + '/' + rid + '.json'
 	})
+},
+
+update_details_from_record: function(record){
+	this.update_details(record.data.type, record.data.id)
 },
 
 success_callback: function(response, result, type){

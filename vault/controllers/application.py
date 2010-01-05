@@ -10,12 +10,41 @@ log = logging.getLogger(__name__)
 def dashboard(project):
     data = [{
     'layout' : 'border',
-    'items' : [project.grid_config(region='center', resultPanel="Ext.getCmp('dashboard-details')"),
-             {
+    'items' : [{
+                'region' : 'north',
+                'xtype' : 'toolbar',
+                'height' : 32,
+                
+                                   'items' : [{'xtype' : 'vault.open_form_dialog_button',
+                                              'text' : 'New Asset',
+                                              'dialogConfig' : project.new_dialog_config(rtype='assets', title='New Asset (%s)' % project.title, parent_id=project.id), 
+                                              'storeParams': { 'parent_id' : project.id }
+                                           },{'xtype' : 'vault.open_form_dialog_button',
+                                              'text' : 'New Task',
+                                              'dialogConfig' : project.new_dialog_config(rtype='tasks', title='New Task (%s)' % project.title, parent_id=project.id) ,
+                                           },{'xtype' : 'vault.open_form_dialog_button',
+                                              'text' : 'New Preview',
+                                              'dialogConfig' : project.new_dialog_config(rtype='previews', title='New Preview (%s)' % project.title, parent_id=project.id) ,
+                                           },{
+                         'text' : 'Edit',
+                         'xtype' : 'vault.open_form_dialog_button',
+                         'dialogConfig' : project.edit_dialog_config(),
+                         'parentPanel' : "dashboard-grid",
+                         'rtype' : 'resources',
+                         }],
+                                   
+               },{
+                'region':'center',
+                'id' : 'dashboard-grid',
+                'rtype' : 'assets',
+                'xtype' : 'vault.resourcedataview',
+               },{
               'xtype' : 'tabpanel',
               'region' : 'south',
               'height' : 325,
               'activeTab' : 0,
+              'split' : True,
+              'border' : False,
               'items' : [{
                          'title' : 'Details',
                          'id' : 'dashboard-details',
@@ -28,19 +57,49 @@ def dashboard(project):
                                    'rid' : 1,
                                    'title' : None,
                                    'autoScroll' : True,
+                                   'listenTo' : 'Ext.getCmp("dashboard-grid")',
                                    }]
                          },{
                          'title' : 'Assets',
                          'id' : 'dashboard-assets',
-                         'xtype': 'vault.grid',
+                         'xtype': 'vault.layoutpanel',
                          'autoScroll' : True,
                          'split' : True,
                          'height': 325,
                          'items':[{
-                                   'xtype' : 'vault.details',
+                                   'xtype' : 'vault.grid',
                                    'rid' : 1,
                                    'title' : None,
                                    'autoScroll' : True,
+                                   'rtype': 'assets',
+                                   }]
+                         },{
+                         'title' : 'Previews',
+                         'id' : 'dashboard-previews',
+                         'xtype': 'vault.layoutpanel',
+                         'autoScroll' : True,
+                         'split' : True,
+                         'height': 325,
+                         'items':[{
+                                   'xtype' : 'vault.grid',
+                                   'rid' : 1,
+                                   'title' : None,
+                                   'autoScroll' : True,
+                                   'rtype': 'previews',
+                                   }]
+                         },{
+                         'title' : 'Tasks',
+                         'id' : 'dashboard-tasks',
+                         'xtype': 'vault.layoutpanel',
+                         'autoScroll' : True,
+                         'split' : True,
+                         'height': 325,
+                         'items':[{
+                                   'xtype' : 'vault.grid',
+                                   'rid' : 1,
+                                   'title' : None,
+                                   'autoScroll' : True,
+                                   'rtype': 'tasks',
                                    }]
                          }]
                }]

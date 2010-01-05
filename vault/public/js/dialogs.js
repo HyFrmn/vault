@@ -287,9 +287,6 @@ Vault.SelectResourceDialog = Ext.extend(Vault.Dialog, {
 				})
 		this.store.load({
 			params: this.storeParams,
-			handler: function(){
-				this.show()
-			},
 			scope: this,
 		})
 		this.view.on("selectionchange", function(selection){
