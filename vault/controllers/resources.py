@@ -42,6 +42,7 @@ class ResourcesController(BaseController):
     def index(self, format='html'):
         """GET /projects: All items in the collection"""
         c.resources = self.search_index()
+        print c.resources
         if c.resources is None:
             c.resources = meta.Session.query(self._poly_class_).all()
         if format in ['js','json']:
@@ -69,7 +70,6 @@ class ResourcesController(BaseController):
             parent = meta.Session.query(Resource).filter(Resource.id==int(parent_id)).first()
             parent.children.append(c.resource)
         for k, v in c.resource.__dict__.copy().iteritems():
-            print k, v
             if k.endswith('_id'):
                 id_attr = getattr(c.resource, k)
                 relation_attr = k[:-3]

@@ -130,6 +130,14 @@ class Resource(Base):
     def _register(cls, class_):
         cls._classmap[class_.__tablename__] = class_
 
+    @classmethod
+    def find(cls, id):
+        return Session.query(cls).filter(cls.id==id).first()
+
+    @classmethod
+    def query(cls):
+        return Session.query(cls)
+
     def to_json(self):
         return simplejson.dumps(self.to_dict())
 

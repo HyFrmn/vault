@@ -34,14 +34,7 @@ class PreviewsController(ResourcesController):
         myfile.file.close()
         permanent_file.close()
 
-        #Resize into web preview.
-        params = { 'temppath' : temppath, 'fullpath' : fullpath, 'width' : 600, 'height' : 400 }
-        print params
-        cmd = "convert %(temppath)s -resize %(width)dx%(height)d\> -size %(width)dx%(height)d xc:black +swap -gravity center -composite %(fullpath)s" % params
-        subprocess.call(cmd, shell=True)
-        os.remove(temppath)
-
-        self.params[type_]['image'] = fullpath[len(config['uploads.root']):]
+        self.params[type_]['image'] = temppath
         return True
 
     def search_index(self):
@@ -51,5 +44,5 @@ class PreviewsController(ResourcesController):
             if asset:
                 c.resources = meta.Session.query(Preview).filter(Preview.id==asset.preview_id).all()
             else:
-                c.resources = []
-        return c.resources
+                c.resources = meta.Session.query(Preview).all()
+            return c.resources

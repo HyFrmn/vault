@@ -1,3 +1,7 @@
+import os
+import subprocess
+
+import pylons
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 
 from resource import Resource
@@ -19,8 +23,16 @@ class Preview(Resource):
         data['image'] = str(self.image)
         return data
 
-    def _update_image(self, image):
-        self.image = str(image)
+    def _update_image(self, temppath):
+        #Resize into web preview.
+        print temppath
+        image_path = os.path.join(pylons.config['uploads.previews'], os.path.basename(temppath))
+        print image_path
+        print image_path[len(pylons.config['uploads.root']):]
+        params = { 'temppath' : temppath, 'fullpath' : image_path, 'width' : 600, 'height' : 400 }
+        cmd = "convert %(temppath)s -resize %(width)dx%(height)d\> -size %(width)dx%(height)d xc:black +swap -gravity center -composite %(fullpath)s" % params
+        subprocess.call(cmd, shell=True)
+        self.image = str(image_path[len(pylons.config['uploads.root']):])
 
     @classmethod
     def new_form_fields(cls):
