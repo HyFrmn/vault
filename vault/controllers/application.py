@@ -46,7 +46,6 @@ def dashboard(project):
                               'title' : 'Details',
                               'id' : 'dashboard-details',
                               'xtype': 'vault.layoutpanel',
-                              'autoScroll' : True,
                               'split' : True,
                               'height': 325,
                               'items':[{
@@ -60,7 +59,6 @@ def dashboard(project):
                                  'title' : 'Versions',
                                  'id' : 'dashboard-versions',
                                  'xtype': 'vault.layoutpanel',
-                                 'autoScroll' : True,
                                  'split' : True,
                                  'height': 325,
                                  'items':[{
@@ -75,7 +73,6 @@ def dashboard(project):
                                     'title' : 'Previews',
                                     'id' : 'dashboard-previews',
                                     'xtype': 'vault.layoutpanel',
-                                    'autoScroll' : True,
                                     'split' : True,
                                     'height': 325,
                                     'items':[{
@@ -89,7 +86,6 @@ def dashboard(project):
                                        'title' : 'Tasks',
                                        'id' : 'dashboard-tasks',
                                        'xtype': 'vault.layoutpanel',
-                                       'autoScroll' : True,
                                        'split' : True,
                                        'height': 325,
                                        'items':[{
