@@ -25,6 +25,7 @@ from vault.model.preview import Preview
 from vault.model.asset import Asset
 from vault.model.task import Task
 from vault.model.version import Version
+from vault.model.asset_template import AssetTemplate
 
 ## Classes for reflected tables may be defined here, but the table and
 ## mapping itself must be done in the init_model function
