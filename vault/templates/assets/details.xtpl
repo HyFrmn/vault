@@ -1,5 +1,5 @@
 <div class="content">
-        <h2> {title} </h2>
+        <h2> [{id}] {title} </h2>
         <img src="{preview_image}">
         <strong style="display: none">{name}</strong>
         <p>Created at {created}</p>

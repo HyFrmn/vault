@@ -104,11 +104,11 @@ class Resource(Base):
     
     # Relational
     id = Column(Integer, primary_key=True, autoincrement=True)
-    type = Column(String(30))
+    resource_type = Column(String(30))
     children = relation("Resource", Connection.__table__,
                         primaryjoin = id==Connection.__table__.c.parent_id,
                         secondaryjoin = Connection.__table__.c.child_id==id)
-    __mapper_args__ = {'polymorphic_on' : type}
+    __mapper_args__ = {'polymorphic_on' : resource_type}
 
     # Data
     name = Column(String(255))
@@ -188,6 +188,7 @@ class Resource(Base):
 
     def edit_dialog_config(self, *args, **kwargs):
         config = self._dialog_config(self.id, edit=True,**kwargs)
+        config['title'] = "Edit: %s" % self.title
         print config
         return config
         

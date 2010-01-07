@@ -20,14 +20,8 @@ def dashboard(project):
                            'dialogConfig' : project.new_dialog_config(rtype='assets', title='New Asset (%s)' % project.title, parent_id=project.id), 
                            'storeParams': { 'parent_id' : project.id }
                         },{'xtype' : 'vault.open_form_dialog_button',
-                           'text' : 'New Task',
-                           'dialogConfig' : project.new_dialog_config(rtype='tasks', title='New Task (%s)' % project.title, parent_id=project.id) ,
-                        },{'xtype' : 'vault.open_form_dialog_button',
                            'text' : 'New Preview',
                            'dialogConfig' : project.new_dialog_config(rtype='previews', title='New Preview (%s)' % project.title, parent_id=project.id) ,
-                        },{'xtype' : 'vault.open_form_dialog_button',
-                           'text' : 'New Version',
-                           'dialogConfig' : project.new_dialog_config(rtype='versions', title='New Version (%s)' % project.title, parent_id=project.id) ,
                         },{
                           'text' : 'Edit',
                           'xtype' : 'vault.open_form_dialog_button',
@@ -108,7 +102,7 @@ def dashboard(project):
 def _build_menu_item(item):
     if item:
         data = {'text' : item.title, 
-            'id' : '%s:%s' % (item._classname, item.id)}
+            'id' : '%s:%s' % (item.id, item._classname)}
         data['icon'] = item.icon
         if not isinstance(item, Project):
             if not item.children:
@@ -116,6 +110,19 @@ def _build_menu_item(item):
                 data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'rid' : item.id, 'rtype' : item._classname }
         else:
             data['view'] = dashboard(item)
+            data['children'] = [{ 'text' : 'Assets',
+                                  'id' : '%d:project-assets' % item.id,
+                                  'view': item.grid_config(),
+                                  'leaf' : True 
+                                },{ 'text' : 'Tasks',
+                                  'id' : '%d:project-tasks' % item.id,
+                                  'view': item.grid_config(),
+                                  'leaf' : True 
+                                },{ 'text' : 'Versions',
+                                  'id' : '%d:project-versions' % item.id,
+                                  'view': item.grid_config(),
+                                  'leaf' : True 
+                                }]
         return data
 
 
@@ -130,8 +137,8 @@ class ApplicationController(BaseController):
         node = self.params.get('node', None)
         if node:
             if ':' in node:
-                type_, id = node.split(':')
-                data = meta.Session.query(Resource).filter(Resource.id==id).first().children
+                id, type_ = node.split(':')
+                data = meta.Session.query(Resource).filter(Resource.id==id).all()
             else:
                 data = meta.Session.query(Project).all()
         else:

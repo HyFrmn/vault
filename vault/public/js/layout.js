@@ -92,7 +92,13 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     			fn: function(tl, n, r){
 		    		Ext.each(Ext.decode(r.responseText), function(i){
 		                Vault.menu_view_map[i.id] = i.view
+		                if (i.children){
+		                	Ext.each(i.children, function(c){
+		                		Vault.menu_view_map[c.id] = c.view
+		                	})
+		                }
 		    		})
+		    		console.info(n)
     			},
     		},
     	},
@@ -101,7 +107,8 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     listeners: {
 		beforeappend: {
 			fn: function(tree, parent, node){
-	       		node.on("click", function(){
+	       		console.info(node)
+				node.on("click", function(){
 	       			view = Vault.menu_view_map[node.id]
 	       			if (view) {
 	       				Vault.mainPanel.replace(view)
