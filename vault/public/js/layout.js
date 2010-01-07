@@ -92,6 +92,11 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     			fn: function(tl, n, r){
 		    		Ext.each(Ext.decode(r.responseText), function(i){
 		                Vault.menu_view_map[i.id] = i.view
+						if (i.children){
+							Ext.each(i.children, function(c){
+								Vault.menu_view_map[c.id] = c.view
+							})
+						}
 		    		})
     			},
     		},

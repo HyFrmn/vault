@@ -3,19 +3,16 @@ from sqlalchemy.orm import relation
 
 from resource import Resource, Session
 from preview import Preview
+from previewable import Previewable
 
-class Asset(Resource):
+class Asset(Previewable):
     __tablename__ = 'assets'
 
     icon = '/icons/pill.png'
 
     # Relational
-    id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'asset'}
-
-    # Data
-    preview_id = Column(Integer, ForeignKey('previews.id'))
-    preview = relation(Preview, primaryjoin=preview_id==Preview.__table__.c.id)
 
     def to_dict(self):
         data = Resource.to_dict(self)
@@ -41,18 +38,3 @@ class Asset(Resource):
                          }]
         data['storeParams'] = { 'parent_id' : self.id }
         return data
-
-    def _update_preview_id(self, preview_id):
-        try:
-            id = int(preview_id)
-        except ValueError:
-            id = 0
-        if id:
-            preview = Session.query(Resource).filter(Resource.id==id).first()
-            self.preview = preview
-
-    @classmethod
-    def new_form_fields(cls):
-        fields = Resource.new_form_fields()
-        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'previews' }
-        return fields

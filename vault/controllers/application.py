@@ -112,6 +112,22 @@ def _build_menu_item(item):
                 data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'rid' : item.id, 'rtype' : item._classname }
         else:
             data['view'] = dashboard(item)
+            data['children'] = [{
+                                 'text' : 'Assets',
+                                 'id' : '%d:project-assets',
+                                 'view' : item.grid_config(),
+                                 'leaf' : True
+                                 },{
+                                 'text' : 'Tasks',
+                                 'id' : '%d:project-tasks',
+                                 'view' : item.grid_config(),
+                                 'leaf' : True
+                                 },{
+                                 'text' : 'Versions',
+                                 'id' : '%d:project-versions',
+                                 'view' : item.grid_config(),
+                                 'leaf' : True
+                                 }]
         return data
 
 
