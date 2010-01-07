@@ -98,7 +98,6 @@ Vault.mainMenu = new Ext.tree.TreePanel({
 		                	})
 		                }
 		    		})
-		    		console.info(n)
     			},
     		},
     	},
@@ -107,7 +106,6 @@ Vault.mainMenu = new Ext.tree.TreePanel({
     listeners: {
 		beforeappend: {
 			fn: function(tree, parent, node){
-	       		console.info(node)
 				node.on("click", function(){
 	       			view = Vault.menu_view_map[node.id]
 	       			if (view) {

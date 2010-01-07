@@ -23,7 +23,6 @@ class Task(Resource):
 
     def to_dict(self):
         data = Resource.to_dict(self)
-        print 'Creating Dictionary for JSON output.'
         if self.asset:
             for k, v in self.asset.to_dict().iteritems():
                 data['asset_' + k] = v
