@@ -29,7 +29,8 @@ __all__ = ['meta',
            'Asset',
            'Task',
            'Version',
-           'User']
+           'User',
+           'Comment']
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):

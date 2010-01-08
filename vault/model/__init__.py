@@ -20,6 +20,7 @@ from vault.model.version import Version
 from vault.model.asset_template import AssetTemplate, TemplateConnection
 from vault.model.task_template import TaskTemplate
 from vault.model.user import User
+from vault.model.comment import Comment
 
 AssetTemplate.assets = orm.relation(Asset,
                                     primaryjoin=AssetTemplate.id==Asset.template_id,

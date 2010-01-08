@@ -13,7 +13,6 @@ Vault.Details = Ext.extend(Ext.Panel, {
 	listenTo: null,
 	listenToEvent: "selectionchange",
 	
-	
 	initComponent:function(config) {
 	// {{{
 	// hard coded (cannot be changed from outside)
@@ -33,7 +32,6 @@ Vault.Details = Ext.extend(Ext.Panel, {
 			this.update_details_from_record(record)
 		}, this)
 	}
-	
 	
 	if (this.rid != 0){
 		this.update_details(this.rtype,this.rid)
@@ -56,7 +54,7 @@ update_details_from_record: function(record){
 success_callback: function(response, result, type){
 	obj = Ext.decode(response.responseText)
 	detailsEl = this.body
-	if (obj){
+	if (obj && detailsEl){
 		tmpl = new Ext.XTemplate(obj.tmpl)
 		tmpl.overwrite(detailsEl, obj.data)
 		this.setTitle(obj.data.title)

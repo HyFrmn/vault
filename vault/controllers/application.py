@@ -20,8 +20,8 @@ def dashboard(project):
                            'dialogConfig' : project.new_dialog_config(rtype='assets', title='New Asset (%s)' % project.title, project_id=project.id), 
                            'storeParams': { 'parent_id' : project.id }
                         },{'xtype' : 'vault.open_form_dialog_button',
-                           'text' : 'New Preview',
-                           'dialogConfig' : project.new_dialog_config(rtype='previews', title='New Preview (%s)' % project.title, parent_id=project.id) ,
+                           'text' : 'New Comment',
+                           'dialogConfig' : project.new_dialog_config(rtype='comments', title='New Comment (%s)' % project.title, parent_id=project.id) ,
                         },{
                           'text' : 'Edit',
                           'xtype' : 'vault.open_form_dialog_button',

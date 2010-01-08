@@ -19,7 +19,7 @@ class Asset(Previewable):
     id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'asset'}
     template_id = Column(Integer, ForeignKey('asset_templates.id'))
-    project_id = Column(Integer, ForeignKey('projects.id'))
+    project_id = Column(Integer, ForeignKey('projects.id'), nullable=False)
 
     meta = Column(DictionaryDecorator(16384), default={})
     tasks = relation(Task, primaryjoin=Task.asset_id==id,

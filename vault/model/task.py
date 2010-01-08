@@ -13,11 +13,11 @@ class Task(Resource):
     __mapper_args__ = {'polymorphic_identity' : 'task'}
 
     # Data
-    asset_id = Column(Integer, ForeignKey('assets.id'))
+    asset_id = Column(Integer, ForeignKey('assets.id'), nullable=False)
     meta = Column(Text)
     estimate = Column(Float)
     order = Column(Integer)
-    status = Column(Integer)
+    status = Column(Integer, default=0)
     template_id = Column(Integer, ForeignKey('task_templates.id'))
 
     @classmethod
