@@ -11,7 +11,7 @@ class Asset(Previewable):
     icon = '/icons/pill.png'
 
     # Relational
-    id = Column(Integer, ForeignKey('previewable.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'asset'}
 
     #template_id = Column(Integer, ForeignKey('asset_templates.id'))
