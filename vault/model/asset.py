@@ -65,6 +65,13 @@ class Asset(Previewable):
         data['storeParams'] = { 'parent_id' : self.id }
         return data
 
+    @classmethod
+    def new_form_fields(cls):
+        fields = Previewable.new_form_fields()
+        fields['template_name'] = { 'fieldLabel' : 'Template Name' , 'value' : 'realtime_model' }
+        fields['project_id'] = { 'fieldLabel' : 'Project' , 'xtype' : 'hidden' }
+        return fields
+
     def TaskFromTemplate(self, tmpl):
         task = Task.FromTemplate(tmpl)
         task.title = self.title + ' ' + task.title

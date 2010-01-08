@@ -17,7 +17,7 @@ def dashboard(project):
                    'xtype' : 'vault.resourcedataview',
                    'tbarItems' :  [{'xtype' : 'vault.open_form_dialog_button',
                            'text' : 'New Asset',
-                           'dialogConfig' : project.new_dialog_config(rtype='assets', title='New Asset (%s)' % project.title, parent_id=project.id), 
+                           'dialogConfig' : project.new_dialog_config(rtype='assets', title='New Asset (%s)' % project.title, project_id=project.id), 
                            'storeParams': { 'parent_id' : project.id }
                         },{'xtype' : 'vault.open_form_dialog_button',
                            'text' : 'New Preview',

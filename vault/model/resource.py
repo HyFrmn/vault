@@ -216,8 +216,8 @@ class Resource(Base):
                 'editForm' : edit,
                 'resultPanel' : resultPanel,
             }
-        if parent_id:
-            data['storeParams'] = { 'parent_id' : parent_id }
+        if kwargs:
+            data['storeParams'] = kwargs
         data.update(kwargs)
         print data
         return data

@@ -26,7 +26,7 @@ class Project(Previewable):
     root_dir = Column(String(255), default='')
     asset_dir = Column(String(255), default='')
     config_dir = Column(String(255), default='')
-    python_dir = Column(String(255), default='')
+    module_dir = Column(String(255), default='')
 
     def _parse_dir_arg(self, arg):
         arg = str(arg)
@@ -120,4 +120,6 @@ class Project(Previewable):
                         func = getattr(module, attr)
                         func(asset)
                 del module
+            else:
+                print 'WARNING: Could not find module [%s]' % project_module_path
         return asset
