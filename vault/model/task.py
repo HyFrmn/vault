@@ -17,6 +17,7 @@ class Task(Resource):
     meta = Column(Text)
     estimate = Column(Float)
     order = Column(Integer)
+    status = Column(Integer)
     template_id = Column(Integer, ForeignKey('task_templates.id'))
 
     @classmethod
