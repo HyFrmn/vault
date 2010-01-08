@@ -1,12 +1,25 @@
+import simplejson
 import datetime
 
 import sqlalchemy
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relation
+from sqlalchemy.types import TypeDecorator
 from meta import Base, Session
 
 from UserDict import DictMixin
 
+class DictionaryDecorator(TypeDecorator):
+    impl = String
+    def process_bind_param(self, value, engine):
+        assert isinstance(value, dict)
+        return simplejson.dumps(value)
+ 
+    def process_result_value(self, value, engine):
+        return simplejson.loads(str(value))
+ 
+    def copy(self):
+        return DictionaryDecorator(self.impl.length)
 
 class odict(DictMixin):
     def __init__(self, data=None, **kwdata):

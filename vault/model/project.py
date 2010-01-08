@@ -24,18 +24,32 @@ class Project(Previewable):
     root_dir = Column(String(255), default='')
     asset_dir = Column(String(255), default='')
     config_dir = Column(String(255), default='')
+    python_dir = Column(String(255), default='')
 
-    def _update_client(self, client):
-        self.client = str(client)
+    def _parse_dir_arg(self, arg):
+        arg = str(arg)
+        if os.path.isabs(arg):
+            return arg
+        else:
+            if self.root_dir:
+                return os.path.join(self.root_dir, arg)
+            else:
+                return None
 
-    def _update_root_dir(self, client):
-        self.client = str(client)
+    def _update_client(self, arg):
+        self.client = self._parse_dir_arg(arg)
 
-    def _update_asset_dir(self, client):
-        self.client = str(client)
+    def _update_root_dir(self, arg):
+        self.root_dir = self._parse_dir_arg(arg)
 
-    def _update_config_dir(self, client):
-        self.client = str(client)
+    def _update_asset_dir(self, arg):
+        self.asset_dir = self._parse_dir_arg(arg)
+
+    def _update_config_dir(self, arg):
+        self.config_dir = self._parse_dir_arg(arg)
+
+    def _update_module_dir(self, arg):
+        self.module_dir = self._parse_dir_arg(arg)
 
     def grid_config(self,  **kwargs):
         data = Resource.grid_config(self)
@@ -85,11 +99,17 @@ class Project(Previewable):
     def create_asset(self, **kwargs):
         asset = Asset(**kwargs)
         asset.project = self
-        if self.config_dir:
-            project_module_path = os.path.join(self.config_dir, 'project.py')  
+        if self.module_dir:
+            project_module_path = os.path.join(self.module_dir, 'project.py') 
             if os.path.exists(project_module_path):
                 module = imp.load_source('action_module', project_module_path)
-                func = getattr(module, 'create_asset_callback')
-                func(asset)
+                if hasattr(module, 'create_asset_callback'):
+                    func = getattr(module, 'create_asset_callback')
+                    func(asset)
+                if asset.template:
+                    attr = 'create_asset_callback_' + asset.template.name
+                    if hasattr(module, attr):
+                        func = getattr(module, attr)
+                        func(asset)
                 del module
         return asset
