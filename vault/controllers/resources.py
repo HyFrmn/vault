@@ -13,6 +13,7 @@ class ResourcesController(BaseController):
     # file has a resource setup:
     #     map.resource('resource', 'resources')
     _poly_class_ = Resource
+    require_auth = True
 
     def _classname(self):
         return self._poly_class_.__tablename__

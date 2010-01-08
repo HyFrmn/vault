@@ -1,3 +1,33 @@
-<%inherit file="/base.mako" />
-
-<%def name="title()">Vault</%def>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <title>Vault</title>
+        <!-- ** CSS ** -->
+        <!-- base library -->
+        <link rel="stylesheet" type="text/css" href="/ext/ext-all.css" />
+ 
+        <!-- overrides to base library -->
+ 
+        <!-- ** Javascript ** -->
+        <!-- ExtJS library: base/adapter -->
+        <script type="text/javascript" src="/ext/ext-base.js"></script>
+        <!-- ExtJS library: all widgets -->
+        <script type="text/javascript" src="/ext/ext-all-debug.js"></script>
+        
+        <script type="text/javascript" src="/js/file-upload.js"></script>
+        
+        <link rel="stylesheet" type="text/css" href="/css/file-upload.css" />
+        <link rel="stylesheet" type="text/css" href="/css/vault.css" />
+        <!-- page specific -->
+        <script type="text/javascript" src="/js/application.js"></script>
+        <script type="text/javascript" src="/js/dialogs.js"></script>
+        <script type="text/javascript" src="/js/grids.js"></script>
+        <script type="text/javascript" src="/js/details.js"></script>
+        <script type="text/javascript" src="/js/panels.js"></script>
+        <script type="text/javascript" src="/js/components.js"></script>
+        <script type="text/javascript" src="/js/layout.js"></script>
+    </head>
+    <body>
+    </body>
+</html>

@@ -1,6 +1,6 @@
 import datetime
 
-from sqlalchemy import Column, Integer, String, Text, DateTime
+from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 
 from meta import Base
 
@@ -9,7 +9,7 @@ class User(Base):
 
     # Relational
     id = Column(Integer, primary_key=True, autoincrement=True)
-    role = Column(Integer, ForeignKey('roles.id'))
+    #role = Column(Integer, ForeignKey('roles.id'))
 
     # Data
     username = Column(String(255))

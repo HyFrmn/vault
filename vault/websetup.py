@@ -19,7 +19,17 @@ def setup_app(command, conf, vars):
 
     # Create the tables if they don't already exist
     meta.metadata.create_all(bind=meta.engine)
-    
+
+    #Setup Users for authentication.
+    admin_user = User()
+    admin_user.username = 'admin'
+    meta.Session.add(admin_user)
+    dummy_user = User()
+    dummy_user.username = 'dummy'
+    meta.Session.add(dummy_user)
+
+
+    #Setup Defaults
     meta.Session.add(TaskTemplate(name="rough", title="Rough"))
     meta.Session.add(TaskTemplate(name="clean", title="Clean"))
     meta.Session.add(TaskTemplate(name="uv", title="UV"))

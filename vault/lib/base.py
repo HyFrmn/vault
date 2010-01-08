@@ -10,6 +10,9 @@ from pylons import request
 from pylons.controllers import WSGIController
 from pylons.templating import render_mako as render
 
+from pylons import request, response, session, tmpl_context as c
+from pylons.controllers.util import abort, redirect_to
+
 import vault.model as model
 from vault.model import *
 
@@ -25,7 +28,8 @@ __all__ = ['meta',
            'Preview',
            'Asset',
            'Task',
-           'Version']
+           'Version',
+           'User']
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
@@ -44,6 +48,8 @@ def to_json(obj):
     return simplejson.dumps(obj, cls=JSONEncoder, indent=4)
 
 class BaseController(WSGIController):
+    requires_auth = False
+    
     def __call__(self, environ, start_response):
         """Invoke the Controller"""
         # WSGIController.__call__ dispatches to the Controller method
@@ -56,6 +62,13 @@ class BaseController(WSGIController):
 
     def __before__(self):
         self.params = self.parse_params(request.params)
+        if self.requires_auth and 'user' not in session:
+            #Redirect to login
+            session['path_before_login'] = request.path_info
+            session.save()
+            return redirect_to(controller='login', action='login')
+        else:
+            self.current_user = meta.Session.query(User).filter(User.username==session['user']).first()
 
     def parse_params(self, params):
         output = {}
