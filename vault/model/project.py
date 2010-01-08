@@ -99,6 +99,10 @@ class Project(Previewable):
     def create_asset(self, **kwargs):
         asset = Asset(**kwargs)
         asset.project = self
+        if asset.template:
+            for task_tmpl in asset.template.tasks:
+                task = Task.FromTemplate(task_tmpl)
+                asset.tasks.append(task)
         if self.module_dir:
             project_module_path = os.path.join(self.module_dir, 'project.py') 
             if os.path.exists(project_module_path):
