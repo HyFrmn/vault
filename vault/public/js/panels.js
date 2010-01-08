@@ -99,6 +99,7 @@ Vault.ResourceDataView = Ext.extend(Ext.Panel, {
 					layout: 'fit',
 					split: true,
 					border:false,
+					autoScroll: true,
 				},{
 					region: 'north',
 					height: 32,

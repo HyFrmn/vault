@@ -5,9 +5,9 @@ from resource import Resource, Session
 from preview import Preview
 
 class Previewable(Resource):
-    __tablename__ = 'previewable'
+    __tablename__ = 'previewables'
 
-    icon = '/icons/image.png'
+    icon = '/icons/pill.png'
 
     # Relational
     id = Column(Integer, ForeignKey('resources.id'), primary_key=True)

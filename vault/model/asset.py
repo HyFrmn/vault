@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relation
 
 from resource import Resource, Session
-from preview import Preview
+
 from previewable import Previewable
 
 class Asset(Previewable):
@@ -13,6 +13,12 @@ class Asset(Previewable):
     # Relational
     id = Column(Integer, ForeignKey('previewable.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'asset'}
+
+    #template_id = Column(Integer, ForeignKey('asset_templates.id'))
+    #template = relation("AssetTemplate", primaryjoin="Asset.template_id==AssetTemplate.id")
+
+    #project_id = Column(Integer, ForeignKey('projects.id'))
+    #project = relation("Project", primaryjoin="Asset.project_id==Project.id", foreign_keys=['Asset.project_id', 'Project.id'])
 
     def grid_config(self):
         data = Resource.grid_config(self)

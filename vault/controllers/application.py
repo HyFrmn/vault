@@ -40,7 +40,6 @@ def dashboard(project):
                               'title' : 'Details',
                               'id' : 'dashboard-details',
                               'xtype': 'vault.layoutpanel',
-                              'autoScroll' : True,
                               'split' : True,
                               'height': 325,
                               'items':[{
@@ -54,7 +53,6 @@ def dashboard(project):
                                  'title' : 'Versions',
                                  'id' : 'dashboard-versions',
                                  'xtype': 'vault.layoutpanel',
-                                 'autoScroll' : True,
                                  'split' : True,
                                  'height': 325,
                                  'items':[{
@@ -69,7 +67,6 @@ def dashboard(project):
                                     'title' : 'Previews',
                                     'id' : 'dashboard-previews',
                                     'xtype': 'vault.layoutpanel',
-                                    'autoScroll' : True,
                                     'split' : True,
                                     'height': 325,
                                     'items':[{
@@ -83,7 +80,6 @@ def dashboard(project):
                                        'title' : 'Tasks',
                                        'id' : 'dashboard-tasks',
                                        'xtype': 'vault.layoutpanel',
-                                       'autoScroll' : True,
                                        'split' : True,
                                        'height': 325,
                                        'items':[{
@@ -110,6 +106,7 @@ def _build_menu_item(item):
                 data['view'] = { 'xtype' : 'vault.details', 'storeId' : item.id, 'rid' : item.id, 'rtype' : item._classname }
         else:
             data['view'] = dashboard(item)
+<<<<<<< HEAD
             data['children'] = [{ 'text' : 'Assets',
                                   'id' : '%d:project-assets' % item.id,
                                   'view': item.grid_config(),
@@ -123,6 +120,24 @@ def _build_menu_item(item):
                                   'view': item.grid_config(),
                                   'leaf' : True 
                                 }]
+=======
+            data['children'] = [{
+                                 'text' : 'Assets',
+                                 'id' : '%d:project-assets',
+                                 'view' : item.grid_config(),
+                                 'leaf' : True
+                                 },{
+                                 'text' : 'Tasks',
+                                 'id' : '%d:project-tasks',
+                                 'view' : item.grid_config(),
+                                 'leaf' : True
+                                 },{
+                                 'text' : 'Versions',
+                                 'id' : '%d:project-versions',
+                                 'view' : item.grid_config(),
+                                 'leaf' : True
+                                 }]
+>>>>>>> 8fe13377d8ab3ddffa340baa676288f6ee037865
         return data
 
 

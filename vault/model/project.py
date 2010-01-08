@@ -3,6 +3,7 @@ from sqlalchemy.orm import relation
 
 from resource import Resource
 from preview import Preview
+from asset import Asset
 
 class Project(Resource):
     __tablename__ = 'projects'
@@ -15,13 +16,24 @@ class Project(Resource):
 
     # Data
     client = Column(String(255))
-    #preview_id = Column(Integer, ForeignKey('previews.id'))
-    #preview = relation(Preview)
+    preview_id = Column(Integer, ForeignKey('previews.id'))
+    preview = relation(Preview, primaryjoin=preview_id==Preview.__table__.c.id)
 
     root_dir = Column(String(255))
     asset_dir = Column(String(255))
     config_dir = Column(String(255))
 
+    def _update_client(self, client):
+        self.client = str(client)
+
+    def _update_root_dir(self, client):
+        self.client = str(client)
+
+    def _update_asset_dir(self, client):
+        self.client = str(client)
+
+    def _update_config_dir(self, client):
+        self.client = str(client)
 
     def grid_config(self,  **kwargs):
         data = Resource.grid_config(self)
@@ -67,3 +79,8 @@ class Project(Resource):
         fields['client'] = {'fieldLabel' : 'Client'}
         fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'previews'}
         return fields
+
+    def create_asset(self, **kwargs):
+        asset = Asset(**kwargs)
+        if os.path.exists(self.config_dir, 'project.py'):
+            m = None

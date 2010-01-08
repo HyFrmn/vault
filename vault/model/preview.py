@@ -1,4 +1,5 @@
 import os
+import datetime
 import subprocess
 
 import pylons
@@ -25,10 +26,9 @@ class Preview(Resource):
 
     def _update_image(self, temppath):
         #Resize into web preview.
-        print temppath
-        image_path = os.path.join(pylons.config['uploads.previews'], os.path.basename(temppath))
+        ticketnum = datetime.datetime.now().strftime('%y%m%d%H%M%S')
+        image_path = os.path.join(pylons.config['uploads.previews'], ticketnum + '_' + os.path.basename(temppath))
         print image_path
-        print image_path[len(pylons.config['uploads.root']):]
         params = { 'temppath' : temppath, 'fullpath' : image_path, 'width' : 600, 'height' : 400 }
         cmd = "convert %(temppath)s -resize %(width)dx%(height)d\> -size %(width)dx%(height)d xc:black +swap -gravity center -composite %(fullpath)s" % params
         subprocess.call(cmd, shell=True)
