@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relation
+from sqlalchemy.ext.orderinglist import ordering_list
 
 from meta import Session
 
@@ -7,6 +8,7 @@ from resource import Resource, Session, DictionaryDecorator
 
 from previewable import Previewable
 from asset_template import AssetTemplate
+from task import Task
 
 class Asset(Previewable):
     __tablename__ = 'assets'
@@ -16,13 +18,13 @@ class Asset(Previewable):
     # Relational
     id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'asset'}
-
     template_id = Column(Integer, ForeignKey('asset_templates.id'))
+    project_id = Column(Integer, ForeignKey('projects.id'))
 
     meta = Column(DictionaryDecorator(16384), default={})
-
-    project_id = Column(Integer, ForeignKey('projects.id'))
-    
+    tasks = relation(Task, primaryjoin=Task.asset_id==id,
+                     collection_class=ordering_list('order'),
+                    backref='asset')
     def _update_meta(self, meta):
         if self.meta:
             self.meta.update(meta)
@@ -62,3 +64,10 @@ class Asset(Previewable):
                          }]
         data['storeParams'] = { 'parent_id' : self.id }
         return data
+
+    def TaskFromTemplate(self, tmpl):
+        task = Task.FromTemplate(tmpl)
+        task.title = self.title + ' ' + task.title
+        task.name = self.name + '_' + task.name
+        self.tasks.append(task)
+        return task

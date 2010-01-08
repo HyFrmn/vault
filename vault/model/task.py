@@ -1,9 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Time, Float
 from sqlalchemy.orm import relation
-from sqlalchemy.ext.orderinglist import ordering_list
 
 from resource import Resource, odict, Session
-from asset import Asset
 
 class Task(Resource):
     __tablename__ = 'tasks'
@@ -16,10 +14,9 @@ class Task(Resource):
 
     # Data
     asset_id = Column(Integer, ForeignKey('assets.id'))
-    asset = relation(Asset, primaryjoin=asset_id==Asset.__table__.c.id, collection_class=ordering_list('position'), backref='tasks')
     meta = Column(Text)
     estimate = Column(Float)
-    order = Column(Integer, ForeignKey('tasks.id'))
+    order = Column(Integer)
     template_id = Column(Integer, ForeignKey('task_templates.id'))
 
     @classmethod

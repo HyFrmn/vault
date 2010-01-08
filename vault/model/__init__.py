@@ -20,7 +20,11 @@ from vault.model.version import Version
 from vault.model.asset_template import AssetTemplate, TemplateConnection
 from vault.model.task_template import TaskTemplate
 
-AssetTemplate.assets = orm.relation(Asset, primaryjoin=AssetTemplate.id==Asset.template_id, foreign_keys=[Asset.template_id], remote_side=Asset.template_id)
+AssetTemplate.assets = orm.relation(Asset,
+                                    primaryjoin=AssetTemplate.id==Asset.template_id,
+                                    foreign_keys=[Asset.template_id],
+                                    remote_side=Asset.template_id,
+                                    backref=orm.backref("template", foreign_keys=[Asset.template_id]))
 TaskTemplate.tasks = orm.relation(Task, 
                                   primaryjoin=TaskTemplate.id==Task.template_id,
                                   foreign_keys=[Task.template_id],

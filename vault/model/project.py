@@ -105,7 +105,7 @@ class Project(Previewable):
             for task_tmpl_name in asset.template.meta['tasks']:
                 tmpl = TaskTemplate.find_by_name(task_tmpl_name)
                 if tmpl:
-                    task = Task.FromTemplate(tmpl)
+                    task = asset.TaskFromTemplate(tmpl)
                     asset.tasks.append(task)
         if self.module_dir:
             project_module_path = os.path.join(self.module_dir, 'project.py') 
