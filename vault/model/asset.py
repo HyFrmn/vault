@@ -17,8 +17,19 @@ class Asset(Previewable):
     #template_id = Column(Integer, ForeignKey('asset_templates.id'))
     #template = relation("AssetTemplate", primaryjoin="Asset.template_id==AssetTemplate.id")
 
-    #project_id = Column(Integer, ForeignKey('projects.id'))
-    #project = relation("Project", primaryjoin="Asset.project_id==Project.id", foreign_keys=['Asset.project_id', 'Project.id'])
+    project_id = Column(Integer, ForeignKey('projects.id'))
+    
+    def to_dict(self):
+        data = Previewable.to_dict(self)
+        if self.project:
+            data['project_id'] = int(self.project.id)
+            data['project_name'] = str(self.project.name)
+            data['project_title'] = str(self.project.title)
+        else:
+            data['project_id'] = None
+            data['project_name'] = None
+            data['project_title'] = None
+        return data
 
     def grid_config(self):
         data = Resource.grid_config(self)

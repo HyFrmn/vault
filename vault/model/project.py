@@ -1,27 +1,29 @@
+import os
+import imp
+
 from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relation
 
 from resource import Resource
-from preview import Preview
+from previewable import Previewable
 from asset import Asset
 
-class Project(Resource):
+class Project(Previewable):
     __tablename__ = 'projects'
 
     icon = '/icons/folder.png'
 
     # Relational
-    id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity' : 'project'}
+    assets = relation(Asset, primaryjoin=id==Asset.project_id, backref="project")
 
     # Data
-    client = Column(String(255))
-    preview_id = Column(Integer, ForeignKey('previews.id'))
-    preview = relation(Preview, primaryjoin=preview_id==Preview.__table__.c.id)
+    client = Column(String(255), default='')
 
-    root_dir = Column(String(255))
-    asset_dir = Column(String(255))
-    config_dir = Column(String(255))
+    root_dir = Column(String(255), default='')
+    asset_dir = Column(String(255), default='')
+    config_dir = Column(String(255), default='')
 
     def _update_client(self, client):
         self.client = str(client)
@@ -82,5 +84,12 @@ class Project(Resource):
 
     def create_asset(self, **kwargs):
         asset = Asset(**kwargs)
-        if os.path.exists(self.config_dir, 'project.py'):
-            m = None
+        asset.project = self
+        if self.config_dir:
+            project_module_path = os.path.join(self.config_dir, 'project.py')  
+            if os.path.exists(project_module_path):
+                module = imp.load_source('action_module', project_module_path)
+                func = getattr(module, 'create_asset_callback')
+                func(asset)
+                del module
+        return asset
