@@ -7,6 +7,8 @@ from sqlalchemy.orm import relation
 from resource import Resource
 from previewable import Previewable
 from asset import Asset
+from task import Task
+from task_template import TaskTemplate
 
 class Project(Previewable):
     __tablename__ = 'projects'
@@ -99,10 +101,12 @@ class Project(Previewable):
     def create_asset(self, **kwargs):
         asset = Asset(**kwargs)
         asset.project = self
-        if asset.template:
-            for task_tmpl in asset.template.tasks:
-                task = Task.FromTemplate(task_tmpl)
-                asset.tasks.append(task)
+        if asset.template.meta.get('tasks', None):
+            for task_tmpl_name in asset.template.meta['tasks']:
+                tmpl = TaskTemplate.find_by_name(task_tmpl_name)
+                if tmpl:
+                    task = Task.FromTemplate(tmpl)
+                    asset.tasks.append(task)
         if self.module_dir:
             project_module_path = os.path.join(self.module_dir, 'project.py') 
             if os.path.exists(project_module_path):

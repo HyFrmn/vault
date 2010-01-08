@@ -16,11 +16,16 @@ class Task(Resource):
 
     # Data
     asset_id = Column(Integer, ForeignKey('assets.id'))
-    asset = relation(Asset, primaryjoin=asset_id==Asset.__table__.c.id, collection_class=ordering_list('position'))
+    asset = relation(Asset, primaryjoin=asset_id==Asset.__table__.c.id, collection_class=ordering_list('position'), backref='tasks')
     meta = Column(Text)
     estimate = Column(Float)
     order = Column(Integer, ForeignKey('tasks.id'))
     template_id = Column(Integer, ForeignKey('task_templates.id'))
+
+    @classmethod
+    def FromTemplate(cls, tmpl):
+        task = cls.__call__(name=tmpl.name, title=tmpl.title)
+        return task
 
     def to_dict(self):
         data = Resource.to_dict(self)

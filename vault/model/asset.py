@@ -27,7 +27,7 @@ class Asset(Previewable):
         if self.meta:
             self.meta.update(meta)
         else:
-            self.meta = {}
+            self.meta = meta
     
     def _update_template_name(self, name):
         template = Session.query(AssetTemplate).filter(AssetTemplate.name==name).first()
