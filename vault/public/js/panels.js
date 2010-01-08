@@ -84,7 +84,7 @@ Vault.ResourceDataView = Ext.extend(Ext.Panel, {
 		this.tbarItems.push(this.search_field)
 		this.search_field.on("keyup", function(){
 		  filter = this.search_field.getValue()
-		  xpr = new RegExp(filter)
+		  xpr = new RegExp(filter.toLowerCase())
 		  this.store.filter('name', xpr)
 		},this)
 		this.add({
