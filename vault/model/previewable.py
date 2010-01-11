@@ -11,7 +11,7 @@ class Previewable(Resource):
 
     # Relational
     id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'previewable'}
+    __mapper_args__ = {'polymorphic_identity' : 'previewables'}
 
     # Data
     preview_id = Column(Integer, ForeignKey('previews.id'))
@@ -20,8 +20,14 @@ class Previewable(Resource):
     def to_dict(self):
         data = Resource.to_dict(self)
         if self.preview:
-            for k, v in self.preview.to_dict().iteritems():
-                data['preview_' + k] = v
+            data['preview_id'] = int(self.preview.id)
+            data['preview_name'] = str(self.preview.name)
+            data['preview_title'] = str(self.preview.title)
+            data['preview_image'] = str(self.preview.image)
+        else:
+            data['preview_id'] = None
+            data['preview_name'] = None
+            data['preview_image'] = None
         return data
 
     def _update_preview_id(self, preview_id):

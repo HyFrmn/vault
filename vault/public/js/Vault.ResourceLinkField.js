@@ -1,36 +1,4 @@
-//vim: ts=4:sw=4:nu:fdc=4:nospell
-Vault.OpenFormDialogButton = Ext.extend(Ext.Button, {
-	// soft config (can be changed from outside)
-	text: 'Open Dialog',
-	dialogConfig: {},
-	parentPanel: null,
-	resultPanel: this.resultPanel,
-	initComponent:function(config) {
-
-		// apply config
-		Ext.apply(this, config);
-		Ext.apply(this.initialConfig, config);
-	
-		// call parent
-		Vault.Details.superclass.initComponent.apply(this, arguments);
-	
-		this.on("click", function(){
-			config = this.dialogConfig
-			cmp = Ext.getCmp(this.parentPanel)
-			dynamic = {}
-			if (cmp){
-				record = cmp.getSelected()
-				rid = record.data.id
-				config = Ext.apply(config, { rid: rid, rtype: 'resources' })
-			}
-			dialog = new Vault.RestfulFormDialog(config)
-			dialog.show()
-		}, this)
-	},
-})
-
-//register xtype
-Ext.reg('vault.open_form_dialog_button', Vault.OpenFormDialogButton); 
+Ext.ns("Vault")
 
 Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
     /**
@@ -52,8 +20,6 @@ Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
     /**
      * @cfg {Object} buttonCfg A standard {@link Ext.Button} config object.
      */
-
-
     rtype: 'previews',
 
     // private
@@ -91,10 +57,6 @@ Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
         	this.text_field_name = field + '_name'
         }
         this.getEl().set({name: null})
-        value = this.value
-        if (value) {
-            this.setValue(value.name)
-        }
 
         var btnCfg = Ext.applyIf(this.buttonCfg || {}, {
             text: this.buttonText
@@ -116,6 +78,12 @@ Vault.ResourceLinkField = Ext.extend(Ext.form.TextField,  {
 
         this.bindListeners();
         this.resizeEl = this.positionEl = this.wrap;
+        
+        value = this.value
+        if (value) {
+            this.setValue(value.name)
+            this.hidden_field.setValue(value.id)
+        }
     },
     
     bindListeners: function(){

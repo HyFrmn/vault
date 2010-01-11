@@ -1,66 +1,23 @@
-/*!
- * Ext JS Library 3.1.0
- * Copyright(c) 2006-2009 Ext JS, LLC
- * licensing@extjs.com
- * http://www.extjs.com/license
- */
-Ext.ns('Ext.ux.form');
+Ext.ns('Vault');
 
-/**
- * @class Ext.ux.form.FileUploadField
- * @extends Ext.form.TextField
- * Creates a file upload field.
- * @xtype fileuploadfield
- */
-Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
-    /**
-     * @cfg {String} buttonText The button text to display on the upload button (defaults to
-     * 'Browse...').  Note that if you supply a value for {@link #buttonCfg}, the buttonCfg.text
-     * value will be used instead if available.
-     */
+
+Vault.FileUploadField = Ext.extend(Ext.form.TextField,  {
     buttonText: 'Browse...',
-    /**
-     * @cfg {Boolean} buttonOnly True to display the file upload field as a button with no visible
-     * text field (defaults to false).  If true, all inherited TextField members will still be available.
-     */
     buttonOnly: false,
-    /**
-     * @cfg {Number} buttonOffset The number of pixels of space reserved between the button and the text field
-     * (defaults to 3).  Note that this only applies if {@link #buttonOnly} = false.
-     */
     buttonOffset: 3,
-    /**
-     * @cfg {Object} buttonCfg A standard {@link Ext.Button} config object.
-     */
-
-    // private
     readOnly: true,
-
-    /**
-     * @hide
-     * @method autoSize
-     */
     autoSize: Ext.emptyFn,
 
-    // private
     initComponent: function(){
-        Ext.ux.form.FileUploadField.superclass.initComponent.call(this);
-
+        Vault.FileUploadField.superclass.initComponent.call(this);
         this.addEvents(
-            /**
-             * @event fileselected
-             * Fires when the underlying file input field's value has changed from the user
-             * selecting a new file from the system file selection dialog.
-             * @param {Ext.ux.form.FileUploadField} this
-             * @param {String} value The file value returned by the underlying file input field
-             */
             'fileselected'
         );
     },
 
     // private
     onRender : function(ct, position){
-        Ext.ux.form.FileUploadField.superclass.onRender.call(this, ct, position);
+        Vault.FileUploadField.superclass.onRender.call(this, ct, position);
 
         this.wrap = this.el.wrap({cls:'x-form-field-wrap x-form-file-wrap'});
         this.el.addClass('x-form-file-text');
@@ -122,7 +79,7 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
         this.fileInput.remove();
         this.createFileInput();
         this.bindListeners();
-        Ext.ux.form.FileUploadField.superclass.reset.call(this);
+        Vault.FileUploadField.superclass.reset.call(this);
     },
 
     // private
@@ -132,7 +89,7 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
 
     // private
     onResize : function(w, h){
-        Ext.ux.form.FileUploadField.superclass.onResize.call(this, w, h);
+        Vault.FileUploadField.superclass.onResize.call(this, w, h);
 
         this.wrap.setWidth(w);
 
@@ -144,17 +101,17 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
 
     // private
     onDestroy: function(){
-        Ext.ux.form.FileUploadField.superclass.onDestroy.call(this);
+        Vault.FileUploadField.superclass.onDestroy.call(this);
         Ext.destroy(this.fileInput, this.button, this.wrap);
     },
     
     onDisable: function(){
-        Ext.ux.form.FileUploadField.superclass.onDisable.call(this);
+        Vault.FileUploadField.superclass.onDisable.call(this);
         this.doDisable(true);
     },
     
     onEnable: function(){
-        Ext.ux.form.FileUploadField.superclass.onEnable.call(this);
+        Vault.FileUploadField.superclass.onEnable.call(this);
         this.doDisable(false);
 
     },
@@ -176,7 +133,5 @@ Ext.ux.form.FileUploadField = Ext.extend(Ext.form.TextField,  {
 
 });
 
-Ext.reg('fileuploadfield', Ext.ux.form.FileUploadField);
+Ext.reg('vault.fileuploadfield', Vault.FileUploadField);
 
-// backwards compat
-Ext.form.FileUploadField = Ext.ux.form.FileUploadField;

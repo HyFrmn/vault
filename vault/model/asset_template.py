@@ -25,7 +25,7 @@ class AssetTemplate(Resource):
 
     # Relational
     id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'asset_template'}
+    __mapper_args__ = {'polymorphic_identity' : 'asset_templates'}
 
     meta = Column(DictionaryDecorator(16384), default={})
 

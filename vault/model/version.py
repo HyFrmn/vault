@@ -12,7 +12,7 @@ class Version(Resource):
 
     # Relational
     id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'version'}
+    __mapper_args__ = {'polymorphic_identity' : 'versions'}
 
     # Data
     asset_id = Column(Integer, ForeignKey('assets.id'))

@@ -12,7 +12,7 @@ class TaskTemplate(Resource):
 
     # Relational
     id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'task_template'}
+    __mapper_args__ = {'polymorphic_identity' : 'task_templates'}
 
     meta = Column(DictionaryDecorator(16384), default={})
 

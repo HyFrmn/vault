@@ -138,6 +138,9 @@ class Resource(Base):
         now = datetime.datetime.now()
         self.created = now
         self.modified = now
+        self._init_setup()
+
+    def _init_setup(self):pass
 
     @classmethod
     def _register(cls, class_):

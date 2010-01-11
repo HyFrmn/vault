@@ -36,3 +36,4 @@ AssetTemplate.tasks = orm.relation(TaskTemplate, TemplateConnection.__table__,
                         primaryjoin = AssetTemplate.id==TemplateConnection.asset_template_id,
                         secondaryjoin = TemplateConnection.task_template_id==TaskTemplate.id,
                         foreign_keys=[AssetTemplate.id, TaskTemplate.id], remote_side=[TemplateConnection.asset_template_id], viewonly=True)
+Comment.resource = orm.relation(Resource, primaryjoin=Comment.resource_id==Resource.id, backref='comments')

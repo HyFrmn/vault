@@ -32,12 +32,14 @@ class AssetsController(ResourcesController):
         # url('projects')
         self._before_create()
         project_id = self.params[self._classname()].get('project_id', None)
+        print '\n' * 5, project_id, '\n' * 5
         if not project_id:
-            return to_json({ "success" : False })
+            return to_json({ "success" : False, 'errorMsg' : "No Project Given" })
         else:
+            project_id = int(project_id)
             project = Project.find(project_id)
             if not project:
-                return to_json({ "success" : False })
+                return to_json({ "success" : False , 'errorMsg' : "Could not find project with id [%d]" % project_id })
         log.info('Creating Asset (%s), %s' % (self._poly_class_.__tablename__, self.params[self._classname()]))
         c.resource = project.create_asset(**self.params[self._classname()])
         meta.Session.add(c.resource)

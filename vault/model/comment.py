@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, Text, DateTime, ForeignKey, Time
 from sqlalchemy.orm import relation
 
 from resource import Resource, odict, Session
+from user import User
 
 class Comment(Resource):
     __tablename__ = 'comments'
@@ -10,29 +11,43 @@ class Comment(Resource):
 
     # Relational
     id = Column(Integer, ForeignKey('resources.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'comment'}
+    __mapper_args__ = {'polymorphic_identity' : 'comments', 'inherit_condition' : id==Resource.id}
 
     # Data
-    resource_id = Column(Integer, nullable=False)
-    meta = Column(Text)
-    parent = relation(Resource, primaryjoin=resource_id==Resource.id, foreign_keys=[resource_id])
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user = relation(User)
+    resource_id = Column(Integer, ForeignKey('resources.id'))
 
-    @classmethod
-    def FromTemplate(cls, tmpl):
-        task = cls.__call__(name=tmpl.name, title=tmpl.title)
-        return task
+    def _init_setup(self):
+        if self.resource:
+            self.title = 'Comment on "%s"' % self.resource.title
+            self.name = "%s_comment" % self.resource.name
 
     def to_dict(self):
         data = Resource.to_dict(self)
-        if self.asset:
-            for k, v in self.asset.to_dict().iteritems():
-                data['asset_' + k] = v
+        if self.resource:
+            data['resource_title'] = self.resource.title
+            data['resource_name'] = self.resource.name
+            data['resource_id'] = self.resource.id
+        else:           
+            data['resource_title'] = None
+            data['resource_name'] = None
+            data['resource_id'] = None
+        if self.user:
+            data['user_username'] = self.user.username
+            data['user_id'] = self.user.id
+        else:
+            data['user_username'] = None
+            data['user_id'] = None
         return data
 
     @classmethod
     def new_form_fields(cls):
         #fields = Resource.new_form_fields()
         fields = Resource.new_form_fields()
+        del fields['name']
+        del fields['title']
+        fields.insert(0, 'resource', {'fieldLabel': 'Resource', 'xtype':'vault.resourcelinkfield'})
         return fields
 
     def _edit_form_fields(self):
@@ -42,7 +57,6 @@ class Comment(Resource):
         try:
             id = int(asset_id)
         except ValueError:
-            id = 0
+            return
         if id:
-            asset = Session.query(Resource).filter(Resource.id==id).first()
-            self.asset = asset
+            self.resource = Session.query(Resource).filter(Resource.id==id).first()

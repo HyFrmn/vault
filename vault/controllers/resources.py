@@ -3,6 +3,8 @@ import logging
 from pylons import request, response, session, tmpl_context as c
 from pylons.controllers.util import abort, redirect_to
 
+from sqlalchemy.orm import join
+
 from vault.lib.base import *
 
 log = logging.getLogger(__name__)
@@ -18,38 +20,53 @@ class ResourcesController(BaseController):
     def _classname(self):
         return self._poly_class_.__tablename__
 
+    def _paging(self):
+        page = self.params.get('start', None)
+        items = self.params.get('limit', None)
+        if page and items:
+            limit = int(items)
+            offset = int(page)
+            return (limit, offset)
+        else:
+            return (None, None)
+
     def search_index(self):
-        resource_id = self.params.get('resource_id', None)
         parent_id = self.params.get('parent_id', None)
-        project_id = self.params.get('project_id', None)
-        asset_id = self.params.get('asset_id', None)
+        #Setup Paging
+        c.count = 0
         c.resources = None
-        if resource_id:
-            c.resources = meta.Session.query(Resource).filter(Resource.id==resource_id).all()
-        elif project_id:
-            q = meta.Session.query(Project).filter(Project.id==project_id).first()
-            if q:
-                c.resources = q.children
-            else:
-                c.resources = []
-        elif parent_id:
-            q = meta.Session.query(Resource).filter(Resource.id==parent_id).first()
-            if q:
-                c.resources = q.children
-            else:
-                c.resources = []
+        limit, offset = self._paging()
+        
+        #Build Query
+        q = meta.Session.query(self._poly_class_)
+        if parent_id:
+            q = q.select_from(join(Connection, Resource, Connection.child_id==Resource.id)).filter(Connection.parent_id==parent_id)
+        if self._classname() != 'resources':
+            q = q.filter(Resource.resource_type==self._classname())
+        for k, v in self.params.iteritems():
+            print '\n' * 5, k, hasattr(self._poly_class_, k),'\n' * 5
+            if hasattr(self._poly_class_, k):
+                q = q.filter(getattr(self._poly_class_, k)==v)
+                print q
+        c.count = q.count()
+        if limit:
+            q = q.limit(limit)
+            if offset:
+                q = q.offset(offset)
+        c.resources = q.all()
         return c.resources
 
     def index(self, format='html'):
         """GET /projects: All items in the collection"""
         c.resources = self.search_index()
-        print c.resources
         if c.resources is None:
-            c.resources = meta.Session.query(self._poly_class_).all()
+            q = meta.Session.query(self._poly_class_)
+            c.count = q.count()
+            c.resources = q.all() 
         if format in ['js','json']:
             #Render JSON
             response.headers['Content-Type'] = 'application/javascript'
-            return to_json({self._classname() : c.resources})
+            return to_json({'total': c.count, self._classname() : c.resources, 'success' : True})
         if format == 'xmlrpc':
             output = []
             for resource in c.resources:

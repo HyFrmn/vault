@@ -20,13 +20,37 @@
         <link rel="stylesheet" type="text/css" href="/css/file-upload.css" />
         <link rel="stylesheet" type="text/css" href="/css/vault.css" />
         <!-- page specific -->
+
+        <!-- Basics -->
+        <script type="text/javascript" src="/js/Vault.LayoutPanel.js"></script>
+        <script type="text/javascript" src="/js/Vault.Grid.js"></script>
+        <script type="text/javascript" src="/js/Vault.Details.js"></script>
+        <script type="text/javascript" src="/js/Vault.Dialog.js"></script>
+        <script type="text/javascript" src="/js/Vault.Actions.js"></script>
+
+        <!-- Form Fields -->
+        <script type="text/javascript" src="/js/Vault.ResourceLinkField.js"></script>
+        <script type="text/javascript" src="/js/Vault.FileUploadField.js"></script>
+
+        <!-- Panels -->
+        <script type="text/javascript" src="/js/Vault.AssetGrid.js"></script>
+        <script type="text/javascript" src="/js/Vault.TaskGrid.js"></script>
+        <script type="text/javascript" src="/js/Vault.VersionGrid.js"></script>
+        <script type="text/javascript" src="/js/Vault.CommentGrid.js"></script>
+
+        <script type="text/javascript" src="/js/Vault.ResourceDataView.js"></script>
+        <script type="text/javascript" src="/js/Vault.AssetDataView.js"></script>
+        <script type="text/javascript" src="/js/Vault.ProjectDashboard.js"></script>
+
+        <!-- Dialogs -->
+        <script type="text/javascript" src="/js/Vault.FormDialog.js"></script>
+        <script type="text/javascript" src="/js/Vault.RestfulFormDialog.js"></script>
+        <script type="text/javascript" src="/js/Vault.SelectResourceDialog.js"></script>
+
+        <!-- Action -->
+        <script type="text/javascript" src="/js/Vault.OpenFormDialog.js"></script>
         <script type="text/javascript" src="/js/application.js"></script>
-        <script type="text/javascript" src="/js/dialogs.js"></script>
-        <script type="text/javascript" src="/js/grids.js"></script>
-        <script type="text/javascript" src="/js/details.js"></script>
-        <script type="text/javascript" src="/js/panels.js"></script>
-        <script type="text/javascript" src="/js/components.js"></script>
-        <script type="text/javascript" src="/js/layout.js"></script>
+
     </head>
     <body>
     </body>

@@ -30,7 +30,8 @@ __all__ = ['meta',
            'Task',
            'Version',
            'User',
-           'Comment']
+           'Comment',
+           'Connection',]
 
 class JSONEncoder(simplejson.JSONEncoder):
     def default(self, obj):
@@ -63,12 +64,12 @@ class BaseController(WSGIController):
 
     def __before__(self):
         self.params = self.parse_params(request.params)
-        if self.requires_auth and 'user' not in session:
-            #Redirect to login
-            session['path_before_login'] = request.path_info
-            session.save()
-            return redirect_to(controller='login', action='login')
-        else:
+        if self.requires_auth:
+            if 'user' not in session:
+                #Redirect to login
+                session['path_before_login'] = request.path_info
+                session.save()
+                return redirect_to(controller='login', action='login')
             self.current_user = meta.Session.query(User).filter(User.username==session['user']).first()
 
     def parse_params(self, params):

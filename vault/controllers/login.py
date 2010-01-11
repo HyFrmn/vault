@@ -42,7 +42,7 @@ class LoginController(BaseController):
         if session.get('path_before_login'):
             redirect_to(session['path_before_login'])
         else: # if previous target is unknown just send the user to a welcome page
-            return redirect('/tracker.html')
+            return redirect_to(controller='application', action='index')
 
     def logout(self):
         """

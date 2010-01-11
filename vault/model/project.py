@@ -17,7 +17,7 @@ class Project(Previewable):
 
     # Relational
     id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'project'}
+    __mapper_args__ = {'polymorphic_identity' : 'projects'}
     assets = relation(Asset, primaryjoin=id==Asset.project_id, backref="project")
 
     # Data

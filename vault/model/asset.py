@@ -17,7 +17,7 @@ class Asset(Previewable):
 
     # Relational
     id = Column(Integer, ForeignKey('previewables.id'), primary_key=True)
-    __mapper_args__ = {'polymorphic_identity' : 'asset'}
+    __mapper_args__ = {'polymorphic_identity' : 'assets'}
     template_id = Column(Integer, ForeignKey('asset_templates.id'))
     project_id = Column(Integer, ForeignKey('projects.id'), nullable=False)
 
@@ -45,6 +45,14 @@ class Asset(Previewable):
             data['project_id'] = None
             data['project_name'] = None
             data['project_title'] = None
+        if self.template:
+            data['template_id'] = int(self.template.id)
+            data['template_name'] = str(self.template.name)
+            data['template_title'] = str(self.template.title)
+        else:
+            data['template_id'] = None
+            data['template_name'] = None
+            data['template_title'] = None
         return data
 
     def grid_config(self):
