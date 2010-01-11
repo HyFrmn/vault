@@ -3,7 +3,7 @@ Ext.ns("Vault")
 Vault.AssetDataView = Ext.extend(Vault.ResourceDataView, {
 	rtype: 'assets',
 	rid: 1,
-    tbarItems: [ Vault.Actions.newAsset, Vault.Actions.addComment],
+    tbarItems: [ Vault.Actions.newAsset, new Vault.Actions.addCommentButton],
 	storeFields: ['id', 'name', 'title', 'description', 'created', 'modified', 'type',
                   'preview_image', 'preview_name', 'preview_title'],
 	tpl: ['<tpl for=".">',
