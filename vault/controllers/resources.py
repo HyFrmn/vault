@@ -44,10 +44,8 @@ class ResourcesController(BaseController):
         if self._classname() != 'resources':
             q = q.filter(Resource.resource_type==self._classname())
         for k, v in self.params.iteritems():
-            print '\n' * 5, k, hasattr(self._poly_class_, k),'\n' * 5
             if hasattr(self._poly_class_, k):
                 q = q.filter(getattr(self._poly_class_, k)==v)
-                print q
         c.count = q.count()
         if limit:
             q = q.limit(limit)

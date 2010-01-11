@@ -14,7 +14,8 @@ Vault.Application = Ext.extend(Ext.Viewport,{
     statusbar: new Ext.Toolbar({
                     region: 'south',
                     height: 24,
-                    layout: 'fit'
+                    layout: 'fit',
+                    items: ['Nothing Selected',]
     }),
     mainPanel: new Vault.LayoutPanel({
                         region: 'center',
@@ -89,11 +90,13 @@ Vault.Application = Ext.extend(Ext.Viewport,{
     },
     changeSelectionCallback: function(record){
         this.selected = record
+        //this.statusbar.removeAll(true)
+        statusCmp = this.statusbar.getComponent(0)
+        statusCmp.setText("Selected " + record.data.title + ' (' + record.data.type + ')')
     },
     changeProjectCallback: function(project_id){
         this.project_id = project_id
     },
-    
     getSelected: function(){
         return this.selected
     },
