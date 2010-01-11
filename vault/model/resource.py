@@ -193,6 +193,9 @@ class Resource(Base):
     def _update_description(self, description):
         self.description = description
 
+
+
+##FORM HELPERS
     @classmethod
     def new_dialog_config(cls, **kwargs):
         t = kwargs.get('type_')
@@ -224,26 +227,6 @@ class Resource(Base):
         data.update(kwargs)
         print data
         return data
-
-    def grid_config(self, **kwargs):
-        data = {
-            'xtype' : 'vault.grid',
-            'rtype' : 'resources',
-            'storeFields' : ['id', 'name', 'title', 'description', 'created', 'modified', 'type'],
-            'storeRoot' : "resources",
-            'title' : "Resources",
-            'id' : '%s-grid' % self.__class__.__name__.lower(),
-            'columns' : [self.config_grid_column('Title', 'title'),
-                         self.config_grid_column('Type', 'type'),
-                         self.config_grid_column('Created', 'created'),
-                         self.config_grid_column('Description', 'description', sort=False)],
-            }
-        data.update(kwargs)
-        return data
-
-    @classmethod
-    def config_grid_column(cls, label, field, width=200, sort=True):
-        return { 'header': label, 'width' : width, 'dataIndex' : field, 'sortable' : sort}
 
     @classmethod
     def new_form_fields(cls):

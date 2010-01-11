@@ -38,6 +38,11 @@ class Project(Previewable):
             else:
                 return None
 
+    def to_dict(self):
+        data = Resource.to_dict(self)
+        data['client'] = str(self.client)
+        return data
+
     def _update_client(self, arg):
         self.client = self._parse_dir_arg(arg)
 
@@ -53,50 +58,8 @@ class Project(Previewable):
     def _update_module_dir(self, arg):
         self.module_dir = self._parse_dir_arg(arg)
 
-    def grid_config(self,  **kwargs):
-        data = Resource.grid_config(self)
-        data['title'] = self.title
-        data['tbar'] = [{
-                         'text' : 'New',
-                         'layout' : 'fit',
-                         'menu' : {
-                                   'items' : [{'xtype' : 'vault.open_form_dialog_button',
-                                              'text' : 'New Asset',
-                                              'dialogConfig' : self.new_dialog_config(rtype='assets', title='New Asset (%s)' % self.title, parent_id=self.id), 
-                                              'storeParams': { 'parent_id' : self.id }
-                                           },{'xtype' : 'vault.open_form_dialog_button',
-                                              'text' : 'New Task',
-                                              'dialogConfig' : self.new_dialog_config(rtype='tasks', title='New Task (%s)' % self.title, parent_id=self.id) ,
-                                           },{'xtype' : 'vault.open_form_dialog_button',
-                                              'text' : 'New Preview',
-                                              'dialogConfig' : self.new_dialog_config(rtype='previews', title='New Preview (%s)' % self.title, parent_id=self.id) ,
-                                           }]
-                                   }
-                         },{
-                         'text' : 'Edit',
-                         'xtype' : 'vault.open_form_dialog_button',
-                         'dialogConfig' : self.edit_dialog_config(kwargs),
-                         'parentPanel' : 'project-grid',
-                         'rtype' : 'resources',
-                         }]
-        data['storeParams'] = { 'project_id' : self.id }
-        data.update(kwargs)
-        return data
-
-    def to_dict(self):
-        data = Resource.to_dict(self)
-        data['client'] = str(self.client)
-        return data
-
     def _update_client(self, client):
         self.client = str(client)
-
-    @classmethod
-    def new_form_fields(cls):
-        fields = Resource.new_form_fields()
-        fields['client'] = {'fieldLabel' : 'Client'}
-        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'previews'}
-        return fields
 
     def create_asset(self, **kwargs):
         asset = Asset(**kwargs)
@@ -123,3 +86,11 @@ class Project(Previewable):
             else:
                 print 'WARNING: Could not find module [%s]' % project_module_path
         return asset
+
+    #Form Helpers 
+    @classmethod
+    def new_form_fields(cls):
+        fields = Resource.new_form_fields()
+        fields['client'] = {'fieldLabel' : 'Client'}
+        fields['preview'] = { 'fieldLabel' : 'Preview' , 'xtype' : 'vault.resourcelinkfield', 'rtype' : 'previews'}
+        return fields

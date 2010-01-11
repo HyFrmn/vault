@@ -34,6 +34,8 @@ class Preview(Resource):
         subprocess.call(cmd, shell=True)
         self.image = str(image_path[len(pylons.config['uploads.root']):])
 
+
+    #Form Field
     @classmethod
     def new_form_fields(cls):
         fields = Resource.new_form_fields()
